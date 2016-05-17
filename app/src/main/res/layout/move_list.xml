@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    card_view:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/ground"
+            android:padding="5dp">
+            <TextView
+                android:id="@+id/tv_move_type"
+                style="@style/HeaderTitle3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="GROUND"/>
+            <TextView
+                android:id="@+id/tv_move_name"
+                style="@style/HeaderTitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_move_type"
+                tools:text="Sand Attack"/>
+            <TextView
+                android:id="@+id/tv_level_learned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                style="@style/HeaderTitle1"
+                tools:text="Lvl 5"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tv_move_attack"
+                style="@style/MoveCardText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="Att | -"/>
+            <TextView
+                android:id="@+id/tv_move_pp"
+                style="@style/MoveCardText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="PP | 15"/>
+            <TextView
+                android:id="@+id/tv_move_accuracy"
+                style="@style/MoveCardText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="Acc | 100"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

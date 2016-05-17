@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Theme colors-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="redbackground">#c24542</color>
+    <color name="blackbackground">#434342</color>
+    <color name="whitebackground">#f7f7f7</color>
+    <color name="graytext">#777777</color>
+    <color name="white">#ffffff</color>
+    <color name="graybackground">#f9f9f9</color>
+    <color name="graytroke">#ededed</color>
+
+    <!--Types Colors-->
+    <color name="bug">#adbd21</color>
+    <color name="dark">#735a4a</color>
+    <color name="dragon">#7b63e7</color>
+    <color name="electric">#ffc631</color>
+    <color name="fairy">#f7b5f7</color>
+    <color name="fight">#a55239</color>
+    <color name="fire">#f75231</color>
+    <color name="flying">#9cadf7</color>
+    <color name="ghost">#6363b5</color>
+    <color name="grass">#7bce52</color>
+    <color name="ground">#d6b55a</color>
+    <color name="ice">#5acee7</color>
+    <color name="normal">#ada594</color>
+    <color name="poison">#b55aa5</color>
+    <color name="psychic">#ff73a5</color>
+    <color name="rock">#bda55a</color>
+    <color name="steel">#adadc6</color>
+    <color name="water">#399cff</color>
+
+
+</resources>

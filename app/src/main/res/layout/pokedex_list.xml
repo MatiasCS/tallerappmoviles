@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="@drawable/border_list_background">
+
+    <View
+        android:id="@+id/black_box"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:background="@color/blackbackground"/>
+
+    <ImageView
+        android:id="@+id/abstract_pokeball"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/black_box"
+        android:layout_alignLeft="@id/black_box"
+        android:layout_alignRight="@id/black_box"
+        android:layout_alignTop="@id/black_box"
+        android:scaleType="fitStart"
+        android:src="@drawable/pokeball" />
+
+    <ImageView
+        android:id="@+id/pokemon_sprite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/black_box"
+        android:layout_alignLeft="@id/black_box"
+        android:layout_alignRight="@id/black_box"
+        android:layout_alignTop="@id/black_box"
+        android:scaleType="fitStart"
+        android:src="@drawable/jolteon" />
+
+    <TextView
+        android:id="@+id/tv_pokemon_name"
+        style="@style/ListElementTittle"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/black_box"
+        tools:text="Bulbasaur" />
+
+    <TextView
+        android:id="@+id/tv_pokemon_number"
+        style="@style/ListElementNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        tools:text="|001" />
+
+</RelativeLayout>

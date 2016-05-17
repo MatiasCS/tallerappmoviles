@@ -1,0 +1,192 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cl.mycompany.dexapplication.fragments.GeneralInformationFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title_evochain"
+                style="@style/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/evo_chain" />
+
+            <View
+                android:id="@+id/div_evochain"
+                style="@style/Divider"
+                android:layout_below="@id/title_evochain" />
+
+            <TextView
+                android:id="@+id/title_abilities"
+                style="@style/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/div_evochain"
+                android:text="@string/abilities" />
+
+            <LinearLayout
+                android:id="@+id/linear_ability_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_abilities"
+                android:orientation="vertical" />
+
+            <View
+                android:id="@+id/div_abilities"
+                style="@style/Divider"
+                android:layout_below="@id/linear_ability_list" />
+
+            <TextView
+                android:id="@+id/title_weak"
+                style="@style/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/div_abilities"
+                android:text="@string/match_up" />
+
+            <LinearLayout
+                android:id="@+id/linear_weaknesses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_weak"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_bug"
+                        style="@style/TypeTag"
+                        android:background="@color/bug"
+                        android:text="@string/bug" />
+
+                    <TextView
+                        android:id="@+id/tv_dark"
+                        style="@style/TypeTag"
+                        android:background="@color/dark"
+                        android:text="@string/dark" />
+
+                    <TextView
+                        android:id="@+id/tv_dragon"
+                        style="@style/TypeTag"
+                        android:background="@color/dragon"
+                        android:text="@string/dragon" />
+
+                    <TextView
+                        android:id="@+id/tv_electric"
+                        style="@style/TypeTag"
+                        android:background="@color/electric"
+                        android:text="@string/electric" />
+
+                    <TextView
+                        android:id="@+id/tv_fairy"
+                        style="@style/TypeTag"
+                        android:background="@color/fairy"
+                        android:text="@string/fairy" />
+
+                    <TextView
+                        android:id="@+id/tv_fight"
+                        style="@style/TypeTag"
+                        android:background="@color/fight"
+                        android:text="@string/fight" />
+
+                    <TextView
+                        android:id="@+id/tv_fire"
+                        style="@style/TypeTag"
+                        android:background="@color/fire"
+                        android:text="@string/fire" />
+
+                    <TextView
+                        android:id="@+id/tv_flying"
+                        style="@style/TypeTag"
+                        android:background="@color/flying"
+                        android:text="@string/flying" />
+
+                    <TextView
+                        android:id="@+id/tv_ghost"
+                        style="@style/TypeTag"
+                        android:background="@color/ghost"
+                        android:text="@string/ghost" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_grass"
+                        style="@style/TypeTag"
+                        android:background="@color/grass"
+                        android:text="@string/grass" />
+
+                    <TextView
+                        android:id="@+id/tv_ground"
+                        style="@style/TypeTag"
+                        android:background="@color/ground"
+                        android:text="@string/ground" />
+
+                    <TextView
+                        android:id="@+id/tv_ice"
+                        style="@style/TypeTag"
+                        android:background="@color/ice"
+                        android:text="@string/ice" />
+
+                    <TextView
+                        android:id="@+id/tv_normal"
+                        style="@style/TypeTag"
+                        android:background="@color/normal"
+                        android:text="@string/normal" />
+
+                    <TextView
+                        android:id="@+id/tv_poison"
+                        style="@style/TypeTag"
+                        android:background="@color/poison"
+                        android:text="@string/poison" />
+
+                    <TextView
+                        android:id="@+id/tv_psychic"
+                        style="@style/TypeTag"
+                        android:background="@color/psychic"
+                        android:text="@string/psychic" />
+
+                    <TextView
+                        android:id="@+id/tv_rock"
+                        style="@style/TypeTag"
+                        android:background="@color/rock"
+                        android:text="@string/rock" />
+
+                    <TextView
+                        android:id="@+id/tv_steel"
+                        style="@style/TypeTag"
+                        android:background="@color/steel"
+                        android:text="@string/steel" />
+
+                    <TextView
+                        android:id="@+id/tv_water"
+                        style="@style/TypeTag"
+                        android:background="@color/water"
+                        android:text="@string/water" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>
