@@ -15,11 +15,19 @@ import android.view.ViewPropertyAnimator;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import cl.mycompany.dexapplication.API.ClientPokeApi;
+import cl.mycompany.dexapplication.API.PokeApi;
 import cl.mycompany.dexapplication.R;
 import cl.mycompany.dexapplication.adapters.PokemonDetailsPagerAdapter;
+import cl.mycompany.dexapplication.model.pokemonModel.Pokemon;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
-public class PokemonDetailsActivity extends FragmentActivity {
+public class PokemonDetailsActivity extends FragmentActivity implements Callback<Pokemon>{
 
     private Toolbar toolbar;
     private ViewPager informationPager;
@@ -32,7 +40,10 @@ public class PokemonDetailsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokemon_details);
         bindActivity();
+        getPokemonInfo();
 
+
+        //Toolbar title animation
         PokemonDetailsPagerAdapter detailsAdapter = new PokemonDetailsPagerAdapter(getSupportFragmentManager());
         informationPager.setAdapter(detailsAdapter);
         tabLayout.setupWithViewPager(informationPager);
@@ -65,5 +76,26 @@ public class PokemonDetailsActivity extends FragmentActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout);
         appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+    }
+
+    public void getPokemonInfo(){
+        String pokemonIndex = getIntent().getExtras().getString("index");
+        Retrofit retrofit = ClientPokeApi.getClient();
+        PokeApi restApi = retrofit.create(PokeApi.class);
+        Call<Pokemon> call = restApi.getPokemon(pokemonIndex);
+        call.enqueue(this);
+    }
+
+    @Override
+    public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
+        if(response.isSuccessful()){
+            String text = response.body().getName();
+            Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onFailure(Call<Pokemon> call, Throwable t) {
+
     }
 }

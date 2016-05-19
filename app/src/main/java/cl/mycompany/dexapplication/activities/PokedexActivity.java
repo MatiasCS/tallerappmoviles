@@ -22,6 +22,8 @@ import cl.mycompany.dexapplication.model.Pokemon;
 
 public class PokedexActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +31,7 @@ public class PokedexActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DatabaseHandler db = new DatabaseHandler(this);
-        ArrayList<Pokemon> pokemon = new ArrayList<>();
-        pokemon = db.getAllPokemon();
+        ArrayList<Pokemon> pokemon = db.getAllPokemon();
         setPokemonList(pokemon);
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -43,10 +44,11 @@ public class PokedexActivity extends AppCompatActivity {
         });*/
     }
 
+    //Populating the gridview
     private void setPokemonList(ArrayList<Pokemon> pokemon){
         //ListView pokemonList = (ListView) findViewById(R.id.pokemon_list);
         GridView pokemonGrid = (GridView) findViewById(R.id.pokemon_grid);
-        Pokemon[] pokemonArray = pokemon.toArray(new Pokemon[0]);
+        Pokemon[] pokemonArray = pokemon.toArray(new Pokemon[151]);
         pokemonGrid.setAdapter(new PokemonListAdapter(this, pokemonArray));
 
         pokemonGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,6 +58,7 @@ public class PokedexActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 intent = new Intent(PokedexActivity.this,
                         PokemonDetailsActivity.class);
+                intent.putExtra("index", String.valueOf(position + 1));
                 startActivity(intent);
             }
         });
