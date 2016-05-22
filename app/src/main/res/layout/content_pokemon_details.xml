@@ -23,6 +23,7 @@
             android:src="@drawable/pokeball_icon" />
 
         <ImageView
+            android:id="@+id/iv_pokemon_sprite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/abstract_pokeball"
@@ -30,7 +31,7 @@
             android:layout_alignRight="@id/abstract_pokeball"
             android:layout_alignTop="@id/abstract_pokeball"
             android:layout_centerVertical="true"
-            android:src="@drawable/jolteon" />
+            android:scaleType="center"/>
 
         <TextView
             android:id="@+id/tv_type1"
@@ -38,12 +39,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/abstract_pokeball"
-            android:text="ELECTRIC"
+            tools:text="ELECTRIC" />
+
+        <TextView
+            android:id="@+id/tv_type2"
+            style="@style/StatsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_type1"
             tools:text="ELECTRIC" />
 
         <View
             style="@style/WhiteDivider"
-            android:layout_below="@id/tv_type1" />
+            android:layout_below="@id/tv_type1"
+            android:id="@+id/view" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -63,7 +72,6 @@
                 <TextView
                     android:id="@+id/tv_pokemon_hp_value"
                     style="@style/StatsValue"
-                    android:text="65"
                     tools:text="65" />
 
                 <TextView
@@ -74,7 +82,6 @@
                 <TextView
                     android:id="@+id/tv_pokemon_attack_value"
                     style="@style/StatsValue"
-                    android:text="65"
                     tools:text="65" />
 
                 <TextView
@@ -85,8 +92,6 @@
                 <TextView
                     android:id="@+id/tv_pokemon_defense_value"
                     style="@style/StatsValue"
-                    android:layout_alignParentRight="true"
-                    android:text="60"
                     tools:text="60" />
             </LinearLayout>
 
@@ -103,7 +108,6 @@
                 <TextView
                     android:id="@+id/tv_pokemon_speciala_value"
                     style="@style/StatsValue"
-                    android:text="110"
                     tools:text="110" />
 
                 <TextView
@@ -115,7 +119,6 @@
                 <TextView
                     android:id="@+id/tv_pokemon_speciald_value"
                     style="@style/StatsValue"
-                    android:text="95"
                     tools:text="95" />
 
                 <TextView
@@ -126,12 +129,10 @@
                 <TextView
                     android:id="@+id/tv_pokemon_speed_value"
                     style="@style/StatsValue"
-                    android:text="130"
                     tools:text="130" />
             </LinearLayout>
 
         </RelativeLayout>
-
     </RelativeLayout>
     <!--scrollview old position-->
 

@@ -67,7 +67,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Getting single contact
-    //public Pokemon getPokemon(int id) {}
+    public Pokemon getPokemon(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_POKEMON, new String[] { KEY_NUMBER,
+                        KEY_NAME}, KEY_NUMBER + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Pokemon pokemon = new Pokemon(cursor.getInt(0),
+                cursor.getString(1));
+        cursor.close();
+        db.close();
+        // return contact
+        return pokemon;
+    }
 
     // Getting All Contacts
     public ArrayList<Pokemon> getAllPokemon() {

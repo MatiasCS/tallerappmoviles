@@ -1,8 +1,8 @@
 package cl.mycompany.dexapplication.API;
 
+import cl.mycompany.dexapplication.model.abilityModel.Ability;
 import cl.mycompany.dexapplication.model.pokemonModel.Pokemon;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -13,4 +13,7 @@ public interface PokeApi {
 
     @GET("pokemon/{number}")
     Call<Pokemon> getPokemon(@Path("number") String number);
+
+    @GET("ability/{number}")
+    Call<Ability> getAbility(@Path("number") String number);
 }

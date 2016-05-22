@@ -48,7 +48,6 @@
                     style="@style/HeaderTitle3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lightning Pokemon"
                     tools:text="Lightning Pokemon"
                     android:gravity="bottom"/>
 
@@ -57,7 +56,6 @@
                     style="@style/HeaderTitle1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="135 | Jolteon"
                     tools:text="135"/>
             </LinearLayout>
 

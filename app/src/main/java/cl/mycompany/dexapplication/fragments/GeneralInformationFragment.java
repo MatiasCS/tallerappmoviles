@@ -2,6 +2,7 @@ package cl.mycompany.dexapplication.fragments;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,11 +11,20 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import cl.mycompany.dexapplication.API.ClientPokeApi;
+import cl.mycompany.dexapplication.API.PokeApi;
 import cl.mycompany.dexapplication.R;
 import cl.mycompany.dexapplication.adapters.AbilityListAdapter;
-import cl.mycompany.dexapplication.model.Ability;
+import cl.mycompany.dexapplication.interfaces.IFragmentToActivity;
+import cl.mycompany.dexapplication.model.abilityModel.Ability;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,14 +35,16 @@ import cl.mycompany.dexapplication.model.Ability;
  * create an instance of this fragment.
  */
 public class GeneralInformationFragment extends Fragment {
+    //ArrayList<Ability> abilities = new ArrayList<>();
+    private IFragmentToActivity mCallback;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_ABILITIES_LIST = "abilitiesList";
+    private static final String ARG_HIDDEN_ABILITY_ID = "hAbilityID";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int[] mAbilitiesList = new int[3];
+    private int mHAbilityID;
 
     private OnFragmentInteractionListener mListener;
 
@@ -44,35 +56,25 @@ public class GeneralInformationFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param abilitiesList Parameter 1.
      * @return A new instance of fragment GeneralInformationFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GeneralInformationFragment newInstance(String param1, String param2) {
+    public static GeneralInformationFragment newInstance(int[] abilitiesList, int hAbilityInd) {
         GeneralInformationFragment fragment = new GeneralInformationFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putIntArray(ARG_ABILITIES_LIST, abilitiesList);
+        args.putInt(ARG_HIDDEN_ABILITY_ID, hAbilityInd);
         fragment.setArguments(args);
         return fragment;
     }
-
-    ArrayList<Ability> abilities = new ArrayList<>();
-    Ability ability1 = new Ability("Volt Absorb",
-            "The Pokémon heals up to 1/4 of it’s maximum Hit Points when hit with Electric-type moves.",
-            0);
-
-    Ability ability2 = new Ability("Quick Feet",
-            " Speed is increased by 50% when induced with a status (Burn, Poison, Sleep, Frozen & Paralysis). If Paralysed, the speed drop is ignored.",
-            1);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mAbilitiesList = getArguments().getIntArray(ARG_ABILITIES_LIST);
+            mHAbilityID = getArguments().getInt(ARG_HIDDEN_ABILITY_ID);
         }
     }
 
@@ -81,7 +83,6 @@ public class GeneralInformationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_general_information, container, false);
-        setAbilityList(fragment);
         return fragment;
     }
 
@@ -94,6 +95,16 @@ public class GeneralInformationFragment extends Fragment {
 /*
     @Override
     public void onAttach(Context context) {
+
+        super.onAttach(context);
+        try {
+            mCallback = (IFragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement IFragmentToActivity");
+        }
+
+
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -101,12 +112,12 @@ public class GeneralInformationFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-*/
+    }*/
+
     @Override
     public void onDetach() {
+        mCallback = null;
         super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -124,22 +135,56 @@ public class GeneralInformationFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void setAbilityList(View fragment){
-        abilities.add(ability1);
-        abilities.add(ability2);
+    public void onRefresh(int[] AbilitiesList , int hAbilityID, View fragment){
+        mAbilitiesList = AbilitiesList;
+        mHAbilityID = hAbilityID;
+        bindAbilityList(fragment);
+    }
 
-        Ability[] abilityArray = abilities.toArray(new Ability[0]);
+    private void bindAbilityList(View fragment){
+        BackgroundTask task = new BackgroundTask();
+        task.execute();
+    }
 
-        LinearLayout listLayout = (LinearLayout) fragment.findViewById(R.id.linear_ability_list); // Your linear layout.
-        AbilityListAdapter adapter = new AbilityListAdapter(getActivity(), abilityArray);// Your adapter.
+    private class BackgroundTask extends AsyncTask<Void, Void,
+            ArrayList<Ability>> {
+        Retrofit retrofit;
 
-        final int adapterCount = adapter.getCount();
-
-        for (int i = 0; i < adapterCount; i++) {
-            View item = adapter.getView(i, null, null);
-            listLayout.addView(item);
+        @Override
+        protected void onPreExecute() {
+            retrofit = ClientPokeApi.getClient();
         }
-        //ListView abilityList = (ListView) findViewById(R.id.desc_ability_list);
-        //abilityList.setAdapter(new AbilityListAdapter(this,abilityArray));
+
+        @Override
+        protected ArrayList<Ability> doInBackground(Void... params) {
+            PokeApi restApi = retrofit.create(PokeApi.class);
+            ArrayList<Ability> abilities = new ArrayList<>();
+            for (int id : mAbilitiesList) {
+                if (id != 0) {
+                    Call<Ability> call = restApi.getAbility(String.valueOf(id));
+                    try {
+                        Ability response = call.execute().body();
+                        abilities.add(response);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return abilities;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Ability> abilities){
+
+            LinearLayout listLayout = (LinearLayout) getView().findViewById(R.id.linear_ability_list);
+            Ability[] abilityArray = abilities.toArray(new Ability[0]);
+            AbilityListAdapter adapter = new AbilityListAdapter(getActivity(), abilityArray, mHAbilityID);
+
+            final int adapterCount = adapter.getCount();
+            for (int i = 0; i < adapterCount; i++) {
+                View item = adapter.getView(i, null, null);
+                listLayout.addView(item);
+            }
+        }
     }
 }

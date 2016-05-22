@@ -32,7 +32,7 @@ public class PokedexActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         DatabaseHandler db = new DatabaseHandler(this);
         ArrayList<Pokemon> pokemon = db.getAllPokemon();
-        setPokemonList(pokemon);
+        setPokemonList(pokemon,db);
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,10 +45,10 @@ public class PokedexActivity extends AppCompatActivity {
     }
 
     //Populating the gridview
-    private void setPokemonList(ArrayList<Pokemon> pokemon){
+    private void setPokemonList(ArrayList<Pokemon> pokemon, DatabaseHandler db){
         //ListView pokemonList = (ListView) findViewById(R.id.pokemon_list);
         GridView pokemonGrid = (GridView) findViewById(R.id.pokemon_grid);
-        Pokemon[] pokemonArray = pokemon.toArray(new Pokemon[151]);
+        final Pokemon[] pokemonArray = pokemon.toArray(new Pokemon[151]);
         pokemonGrid.setAdapter(new PokemonListAdapter(this, pokemonArray));
 
         pokemonGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,7 +58,8 @@ public class PokedexActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 intent = new Intent(PokedexActivity.this,
                         PokemonDetailsActivity.class);
-                intent.putExtra("index", String.valueOf(position + 1));
+                intent.putExtra("index",position + 1);
+                intent.putExtra("name",pokemonArray[position].getName());
                 startActivity(intent);
             }
         });
