@@ -1,19 +1,19 @@
 package cl.mycompany.dexapplication.fragments;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cl.mycompany.dexapplication.API.ClientPokeApi;
 import cl.mycompany.dexapplication.API.PokeApi;
@@ -21,9 +21,12 @@ import cl.mycompany.dexapplication.R;
 import cl.mycompany.dexapplication.adapters.AbilityListAdapter;
 import cl.mycompany.dexapplication.interfaces.IFragmentToActivity;
 import cl.mycompany.dexapplication.model.abilityModel.Ability;
+import cl.mycompany.dexapplication.model.typeModel.DoubleDamageFrom;
+import cl.mycompany.dexapplication.model.typeModel.HalfDamageFrom;
+import cl.mycompany.dexapplication.model.typeModel.NoDamageFrom;
+import cl.mycompany.dexapplication.model.typeModel.Type;
+import cl.mycompany.dexapplication.utils.uiFormat;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -44,6 +47,7 @@ public class GeneralInformationFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private int[] mAbilitiesList = new int[3];
+    private int[] mTypesList;
     private int mHAbilityID;
 
     private OnFragmentInteractionListener mListener;
@@ -135,18 +139,25 @@ public class GeneralInformationFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void onRefresh(int[] AbilitiesList , int hAbilityID, View fragment){
-        mAbilitiesList = AbilitiesList;
+    public void onRefresh(int[] abilitiesList , int hAbilityID, int[] typesList){
+        mAbilitiesList = abilitiesList;
         mHAbilityID = hAbilityID;
-        bindAbilityList(fragment);
+        mTypesList = typesList;
+        bindAbilityList();
+        bindTypeMatchUp();
     }
 
-    private void bindAbilityList(View fragment){
-        BackgroundTask task = new BackgroundTask();
+    private void bindAbilityList(){
+        setAbilitiesTask task = new setAbilitiesTask();
         task.execute();
     }
 
-    private class BackgroundTask extends AsyncTask<Void, Void,
+    private void bindTypeMatchUp(){
+        setWeaknnessesTask task = new setWeaknnessesTask();
+        task.execute();
+    }
+
+    private class setAbilitiesTask extends AsyncTask<Void, Void,
             ArrayList<Ability>> {
         Retrofit retrofit;
 
@@ -184,6 +195,59 @@ public class GeneralInformationFragment extends Fragment {
             for (int i = 0; i < adapterCount; i++) {
                 View item = adapter.getView(i, null, null);
                 listLayout.addView(item);
+            }
+        }
+    }
+
+    private class setWeaknnessesTask extends AsyncTask<Void, Void,
+            List<Type>> {
+        Retrofit retrofit;
+
+        @Override
+        protected void onPreExecute() {
+            retrofit = ClientPokeApi.getClient();
+        }
+
+        @Override
+        protected List<Type> doInBackground(Void... params) {
+            PokeApi restApi = retrofit.create(PokeApi.class);
+            List<Type> typeList = new ArrayList<Type>();
+            for (int id : mTypesList) {
+                if (id != 0) {
+                    Call<Type> call = restApi.getType(String.valueOf(id));
+                    try {
+                        Type response = call.execute().body();
+                        typeList.add(response);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return typeList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Type> typeList){
+            if(typeList.size()>1) {
+                List<List<DoubleDamageFrom>> times2 = new ArrayList<List<DoubleDamageFrom>>(2);
+                List<List<HalfDamageFrom>> timeshalf = new ArrayList<List<HalfDamageFrom>>(2);
+                List<List<NoDamageFrom>> times0 = new ArrayList<List<NoDamageFrom>>(2);
+
+                for (Type type : typeList) {
+                    times2.add(type.getDamageRelations().getDoubleDamageFrom());
+                    timeshalf.add(type.getDamageRelations().getHalfDamageFrom());
+                    times0.add(type.getDamageRelations().getNoDamageFrom());
+                }
+
+                Map<String, String> weaknnessesResume = uiFormat.timesEffectiveFromDualTyping(times2, timeshalf, times0);
+            }
+            else {
+                Type type = typeList.get(0);
+                List<DoubleDamageFrom> times2 = type.getDamageRelations().getDoubleDamageFrom();
+                List<HalfDamageFrom> timeshalf = type.getDamageRelations().getHalfDamageFrom();
+                List<NoDamageFrom> times0 = type.getDamageRelations().getNoDamageFrom();
+                Map<String, String> weaknnessesResume = uiFormat.timesEffectiveFromMonoTyping(times2, timeshalf, times0);
+
             }
         }
     }

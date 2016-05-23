@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
  */
 public class supportFunctions {
 
-    public static int getAbilityId(String abilityURL){
+    public static int getIdFromURL(String abilityURL){
         StringTokenizer id = new StringTokenizer(abilityURL,"/");
         int tokenNumber = id.countTokens();
         int i = 1;

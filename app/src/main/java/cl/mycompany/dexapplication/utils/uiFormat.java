@@ -1,6 +1,15 @@
 package cl.mycompany.dexapplication.utils;
 
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
+
+import cl.mycompany.dexapplication.model.typeModel.DamageRelations;
+import cl.mycompany.dexapplication.model.typeModel.DoubleDamageFrom;
+import cl.mycompany.dexapplication.model.typeModel.HalfDamageFrom;
+import cl.mycompany.dexapplication.model.typeModel.NoDamageFrom;
 
 /**
  * Created by Matias on 5/21/2016.
@@ -40,5 +49,94 @@ public class uiFormat {
         while (st.hasMoreTokens())
             completeLine += st.nextToken() + " ";
         return completeLine;
+    }
+
+    public static Map<String ,String> timesEffectiveFromMonoTyping(List<DoubleDamageFrom> times2, List<HalfDamageFrom> timesHalf,
+                                                                   List<NoDamageFrom> times0){
+        Map <String, String> weaknesses = new Hashtable<String,String>();
+
+        for(DoubleDamageFrom type : times2)
+            weaknesses.put(type.getName(),"X2");
+
+        for(HalfDamageFrom type : timesHalf)
+            weaknesses.put(type.getName(),"X1/2");
+
+        for(NoDamageFrom type: times0)
+            weaknesses.put(type.getName(),"X0");
+
+        return weaknesses;
+    }
+
+    public static Map<String ,String> timesEffectiveFromDualTyping(List<List<DoubleDamageFrom>> times2, List<List<HalfDamageFrom>> timesHalf,
+                                                                   List<List<NoDamageFrom>> times0){
+        Map <String, String> weaknesses = new Hashtable<String,String>();
+        List<DoubleDamageFrom> type1Times2 = times2.get(0);
+        List<DoubleDamageFrom> type2Times2 = times2.get(1);
+        List<HalfDamageFrom> type1TimesHalf = timesHalf.get(0);
+        List<HalfDamageFrom> type2TimesHalf = timesHalf.get(1);
+        List<NoDamageFrom> type1Times0 = times0.get(0);
+        List<NoDamageFrom> type2Times0 = times0.get(1);
+
+        for(DoubleDamageFrom type : type1Times2){
+            String effectiveness  = timesEffectiveFromDouble(type.getName(),type2Times2, type2TimesHalf);
+            weaknesses.put(type.getName(),effectiveness);
+        }
+        for (DoubleDamageFrom type: type2Times2){
+            if(!weaknesses.containsKey(type.getName())){
+                String effectiveness  = timesEffectiveFromDouble(type.getName(),type1Times2, type1TimesHalf);
+                weaknesses.put(type.getName(),effectiveness);
+            }
+        }
+
+        for(HalfDamageFrom type : type1TimesHalf){
+            String effectiveness  = timesEffectiveFromHalf(type.getName(),type2Times2, type2TimesHalf);
+            weaknesses.put(type.getName(),effectiveness);
+        }
+
+        for (HalfDamageFrom type: type2TimesHalf){
+            if(!weaknesses.containsKey(type.getName())){
+                String effectiveness  = timesEffectiveFromHalf(type.getName(), type1Times2, type1TimesHalf);
+                weaknesses.put(type.getName(),effectiveness);
+            }
+        }
+
+        for(NoDamageFrom type: type1Times0)
+            weaknesses.put(type.getName(),"X0");
+
+        for (NoDamageFrom type: type2Times0){
+            if(!weaknesses.containsKey(type.getName())){
+                weaknesses.put(type.getName(),"X0");
+            }
+        }
+
+        return weaknesses;
+    }
+
+    public static String timesEffectiveFromHalf(String type, List<DoubleDamageFrom> times2, List<HalfDamageFrom> timesHalf){
+        String effectiveness = "x1/2";
+
+        for (DoubleDamageFrom iterator: times2)
+            if(iterator.getName().equals(type))
+                effectiveness = "x1";
+
+        for (HalfDamageFrom iterator: timesHalf)
+            if(iterator.getName().equals(type))
+                effectiveness = "x1/4";
+
+        return effectiveness;
+    }
+
+    public static String timesEffectiveFromDouble(String type, List<DoubleDamageFrom> times2, List<HalfDamageFrom> timesHalf){
+        String effectiveness = "x2";
+
+        for (DoubleDamageFrom iterator: times2)
+            if(iterator.getName().equals(type))
+                effectiveness = "x4";
+
+        for (HalfDamageFrom iterator: timesHalf)
+            if(iterator.getName().equals(type))
+                effectiveness = "x1";
+
+        return effectiveness;
     }
 }

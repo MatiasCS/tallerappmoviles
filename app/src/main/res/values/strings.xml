@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DexApplication</string>
+    <string name="app_name">DexApp</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_pokedex">Pokedex</string>
     <string name="hp">HP</string>
@@ -13,24 +13,24 @@
     <string name="abilities">Abilities</string>
     <string name="match_up">Type Match Up</string>
     <string name="kanto_region">Kanto 001-151</string>
-    <string name="bug">BUG</string>
-    <string name="dark">DARK</string>
-    <string name="dragon">DRAGON</string>
-    <string name="electric">ELECTRIC</string>
-    <string name="fairy">FAIRY</string>
-    <string name="fight">FIGHT</string>
-    <string name="fire">FIRE</string>
-    <string name="flying">FLYING</string>
-    <string name="ghost">GHOST</string>
-    <string name="grass">GRASS</string>
-    <string name="ground">GROUND</string>
-    <string name="ice">ICE</string>
-    <string name="normal">NORMAL</string>
-    <string name="poison">POISON</string>
-    <string name="psychic">PSYCHIC</string>
-    <string name="rock">ROCK</string>
-    <string name="steel">STEEL</string>
-    <string name="water">WATER</string>
+    <string name="bug">BUG X1</string>
+    <string name="dark">DARK X1</string>
+    <string name="dragon">DRAGON X1</string>
+    <string name="electric">ELECTRIC X1</string>
+    <string name="fairy">FAIRY X1</string>
+    <string name="fight">FIGHT X1</string>
+    <string name="fire">FIRE X1</string>
+    <string name="flying">FLYING X1</string>
+    <string name="ghost">GHOST X1</string>
+    <string name="grass">GRASS X1</string>
+    <string name="ground">GROUND X1</string>
+    <string name="ice">ICE X1</string>
+    <string name="normal">NORMAL X1</string>
+    <string name="poison">POISON X1</string>
+    <string name="psychic">PSYCHIC X1</string>
+    <string name="rock">ROCK X1</string>
+    <string name="steel">STEEL X1</string>
+    <string name="water">WATER X1</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

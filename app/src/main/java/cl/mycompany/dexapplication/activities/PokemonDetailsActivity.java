@@ -7,15 +7,12 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.sql.BatchUpdateException;
 import java.util.List;
 
 import cl.mycompany.dexapplication.API.ClientPokeApi;
@@ -97,7 +94,7 @@ public class PokemonDetailsActivity extends FragmentActivity{
             public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
                 if(response.isSuccessful()) {
                     bindBaseInfo(response.body());
-                    inflateFragment(response.body().getAbilities());
+                    inflateFragment(response.body().getAbilities(), response.body().getTypes());
                 }
 
             }
@@ -160,20 +157,26 @@ public class PokemonDetailsActivity extends FragmentActivity{
         }
     }
 
-    private void inflateFragment(List<Ability> abilitiesList){
+    private void inflateFragment(List<Ability> abilitiesList, List<Type> typesList){
         int[] abilitiesID = new int[3];
+        int[] typesID = new int[2];
         int i = 0;
         int hiddenAbilityID = 0;
 
         for(Ability ability : abilitiesList){
-            int id = supportFunctions.getAbilityId(ability.getAbility().getUrl());
+            int id = supportFunctions.getIdFromURL(ability.getAbility().getUrl());
             abilitiesID[ability.getSlot()-1] = id;
             if(ability.getIsHidden())
                 hiddenAbilityID = id;
             i++;
         }
+
+        for(Type type: typesList){
+            int id = supportFunctions.getIdFromURL(type.getType().getUrl());
+            typesID[type.getSlot()-1] = id;
+        }
         Fragment fragment = detailsAdapter.getFragment(tabLayout.getSelectedTabPosition());
-        ((GeneralInformationFragment) fragment).onRefresh(abilitiesID,hiddenAbilityID, fragment.getView());
+        ((GeneralInformationFragment) fragment).onRefresh(abilitiesID,hiddenAbilityID,typesID);
 
     }
 }
