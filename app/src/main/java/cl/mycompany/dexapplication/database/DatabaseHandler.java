@@ -42,6 +42,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_NUMBER + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
         fillDatabase(this);
+        db.close();
     }
 
     // Upgrading database
@@ -106,6 +107,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         // return contact list
+        cursor.close();
+        db.close();
         return pokemonList;
     }
 
@@ -262,5 +265,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.addPokemon(new Pokemon(149,"Dragonite"));
         db.addPokemon(new Pokemon(150,"Mewtwo"));
         db.addPokemon(new Pokemon(151,"Mew"));
+        db.close();
     }
 }

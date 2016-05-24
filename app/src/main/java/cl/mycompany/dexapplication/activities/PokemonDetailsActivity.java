@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +23,10 @@ import cl.mycompany.dexapplication.adapters.PokemonDetailsPagerAdapter;
 import cl.mycompany.dexapplication.fragments.GeneralInformationFragment;
 import cl.mycompany.dexapplication.model.pokemonModel.Ability;
 import cl.mycompany.dexapplication.model.pokemonModel.Pokemon;
+import cl.mycompany.dexapplication.model.pokemonModel.Species;
 import cl.mycompany.dexapplication.model.pokemonModel.Stat;
 import cl.mycompany.dexapplication.model.pokemonModel.Type;
+import cl.mycompany.dexapplication.model.specieModel.Specie;
 import cl.mycompany.dexapplication.utils.supportFunctions;
 import cl.mycompany.dexapplication.utils.uiFormat;
 import retrofit2.Call;
@@ -46,6 +49,7 @@ public class PokemonDetailsActivity extends FragmentActivity{
         setContentView(R.layout.activity_pokemon_details);
         bindActivity();
         getPokemonInfo();
+        bindGenus(getIntent().getExtras().getInt("index"));
         informationPager.setAdapter(detailsAdapter);
         tabLayout.setupWithViewPager(informationPager);
 
@@ -93,8 +97,9 @@ public class PokemonDetailsActivity extends FragmentActivity{
             @Override
             public void onResponse(Call<Pokemon> call, Response<Pokemon> response) {
                 if(response.isSuccessful()) {
-                    bindBaseInfo(response.body());
-                    inflateFragment(response.body().getAbilities(), response.body().getTypes());
+                    Pokemon pokemon = response.body();
+                    bindBaseInfo(pokemon);
+                    inflateFragment(pokemon.getAbilities(), pokemon.getTypes(),pokemon.getSpecies());
                 }
 
             }
@@ -108,7 +113,7 @@ public class PokemonDetailsActivity extends FragmentActivity{
 
     public void bindBaseInfo(Pokemon pokemon){
         //XML Element to be set
-        TextView tvPkmDescription, tvPkmNumber, tvType1, tvType2;
+        TextView tvPkmNumber, tvType1, tvType2;
         TextView [] tvBaseStats = new TextView[6];
         ImageView ivPokemonSprite = (ImageView) findViewById(R.id.iv_pokemon_sprite);
 
@@ -120,7 +125,6 @@ public class PokemonDetailsActivity extends FragmentActivity{
         tvBaseStats[3] = (TextView) findViewById(R.id.tv_pokemon_defense_value);
         tvBaseStats[4] = (TextView) findViewById(R.id.tv_pokemon_attack_value);
         tvBaseStats[5]= (TextView) findViewById(R.id.tv_pokemon_hp_value);
-        tvPkmDescription = (TextView) findViewById(R.id.tv_pokemon_description);
         tvPkmNumber = (TextView) findViewById(R.id.tv_pokemon_number);
 
         //Extraction of pokemon Data
@@ -131,7 +135,6 @@ public class PokemonDetailsActivity extends FragmentActivity{
         String numberName = uiFormat.numberToText(pkmIndex) + " " +pkmName;
 
         //Setting of values
-        tvPkmDescription.setText(pokemon.getSpecies().getName());
         tvPkmNumber.setText(numberName);
         Resources r = getResources();
         ivPokemonSprite.setImageResource(r.getIdentifier(pokemon.getName(),"drawable","cl.mycompany.dexapplication"));
@@ -157,11 +160,12 @@ public class PokemonDetailsActivity extends FragmentActivity{
         }
     }
 
-    private void inflateFragment(List<Ability> abilitiesList, List<Type> typesList){
+    private void inflateFragment(List<Ability> abilitiesList, List<Type> typesList, Species specie){
         int[] abilitiesID = new int[3];
         int[] typesID = new int[2];
         int i = 0;
         int hiddenAbilityID = 0;
+        int specieID = supportFunctions.getIdFromURL(specie.getUrl());
 
         for(Ability ability : abilitiesList){
             int id = supportFunctions.getIdFromURL(ability.getAbility().getUrl());
@@ -176,7 +180,33 @@ public class PokemonDetailsActivity extends FragmentActivity{
             typesID[type.getSlot()-1] = id;
         }
         Fragment fragment = detailsAdapter.getFragment(tabLayout.getSelectedTabPosition());
-        ((GeneralInformationFragment) fragment).onRefresh(abilitiesID,hiddenAbilityID,typesID);
+        ((GeneralInformationFragment) fragment).onRefresh(abilitiesID,hiddenAbilityID,typesID, specieID);
 
     }
+
+    private void bindGenus(int id){
+        Retrofit retrofit;
+        retrofit = ClientPokeApi.getClient();
+        PokeApi restApi = retrofit.create(PokeApi.class);
+
+        Call<Specie> call = restApi.getSpecie(String.valueOf(id));
+        call.enqueue(new Callback<Specie>() {
+            @Override
+            public void onResponse(Call<Specie> call, Response<Specie> response) {
+                Specie specie = response.body();
+                String genus = specie.getGenera().get(0).getGenus() + " pokémon";
+                TextView tvPkmDescription = (TextView) findViewById(R.id.tv_pokemon_description);
+                tvPkmDescription.setText(genus);
+
+            }
+
+            @Override
+            public void onFailure(Call<Specie> call, Throwable t) {
+
+            }
+        });
+
+    }
+
+
 }

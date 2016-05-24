@@ -1,6 +1,7 @@
 package cl.mycompany.dexapplication.API;
 
 import cl.mycompany.dexapplication.model.abilityModel.Ability;
+import cl.mycompany.dexapplication.model.evolutionChainModel.EvolutionChain;
 import cl.mycompany.dexapplication.model.pokemonModel.Pokemon;
 import cl.mycompany.dexapplication.model.specieModel.Specie;
 import cl.mycompany.dexapplication.model.typeModel.Type;
@@ -24,4 +25,7 @@ public interface PokeApi {
 
     @GET("type/{number}")
     Call<Type> getType(@Path("number") String number);
+
+    @GET("evolution-chain/{number}")
+    Call<EvolutionChain> getEvoChain(@Path("number") String number);
 }

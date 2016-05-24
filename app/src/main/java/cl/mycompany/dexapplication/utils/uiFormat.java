@@ -1,11 +1,24 @@
 package cl.mycompany.dexapplication.utils;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import cl.mycompany.dexapplication.R;
+import cl.mycompany.dexapplication.model.evolutionChainModel.Chain;
+import cl.mycompany.dexapplication.model.evolutionChainModel.EvolvesTo;
 import cl.mycompany.dexapplication.model.typeModel.DamageRelations;
 import cl.mycompany.dexapplication.model.typeModel.DoubleDamageFrom;
 import cl.mycompany.dexapplication.model.typeModel.HalfDamageFrom;
@@ -78,18 +91,18 @@ public class uiFormat {
         List<NoDamageFrom> type2Times0 = times0.get(1);
 
         for(DoubleDamageFrom type : type1Times2){
-            String effectiveness  = timesEffectiveFromDouble(type.getName(),type2Times2, type2TimesHalf);
+            String effectiveness  = timesEffectiveFromDouble(type.getName(), type2Times2, type2TimesHalf);
             weaknesses.put(type.getName(),effectiveness);
         }
         for (DoubleDamageFrom type: type2Times2){
             if(!weaknesses.containsKey(type.getName())){
-                String effectiveness  = timesEffectiveFromDouble(type.getName(),type1Times2, type1TimesHalf);
+                String effectiveness  = timesEffectiveFromDouble(type.getName(), type1Times2, type1TimesHalf);
                 weaknesses.put(type.getName(),effectiveness);
             }
         }
 
         for(HalfDamageFrom type : type1TimesHalf){
-            String effectiveness  = timesEffectiveFromHalf(type.getName(),type2Times2, type2TimesHalf);
+            String effectiveness  = timesEffectiveFromHalf(type.getName(), type2Times2, type2TimesHalf);
             weaknesses.put(type.getName(),effectiveness);
         }
 
@@ -101,12 +114,10 @@ public class uiFormat {
         }
 
         for(NoDamageFrom type: type1Times0)
-            weaknesses.put(type.getName(),"X0");
+            weaknesses.put(type.getName(),"x0");
 
         for (NoDamageFrom type: type2Times0){
-            if(!weaknesses.containsKey(type.getName())){
-                weaknesses.put(type.getName(),"X0");
-            }
+            weaknesses.put(type.getName(),"x0");
         }
 
         return weaknesses;
@@ -138,5 +149,19 @@ public class uiFormat {
                 effectiveness = "x1";
 
         return effectiveness;
+    }
+
+    public static void setText(View v, Resources r, Map<String, String> weaknesses){
+        String textValue = "";
+        String  tvID;
+        TextView tv_type;
+        for(Map.Entry<String,String> w : weaknesses.entrySet()){
+            tvID = "tv_";
+            tvID += w.getKey();
+            textValue = w.getKey().toUpperCase() + " " + w.getValue();
+            int identifier = r.getIdentifier(tvID,"id","cl.mycompany.dexapplication");
+            tv_type = (TextView) v.findViewById(identifier);
+            tv_type.setText(textValue);
+        }
     }
 }

@@ -11,9 +11,10 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/title_evochain"
@@ -22,44 +23,47 @@
                 android:layout_height="wrap_content"
                 android:text="@string/evo_chain" />
 
+            <GridView
+                android:id="@+id/evo_chain_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numColumns="3"
+                android:horizontalSpacing="4dp"
+                android:verticalSpacing="4dp" />
+
             <View
                 android:id="@+id/div_evochain"
-                style="@style/Divider"
-                android:layout_below="@id/title_evochain" />
+                style="@style/Divider" />
 
             <TextView
                 android:id="@+id/title_abilities"
                 style="@style/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/div_evochain"
                 android:text="@string/abilities" />
 
             <LinearLayout
                 android:id="@+id/linear_ability_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title_abilities"
                 android:orientation="vertical" />
 
             <View
                 android:id="@+id/div_abilities"
-                style="@style/Divider"
-                android:layout_below="@id/linear_ability_list" />
+                style="@style/Divider" />
 
             <TextView
                 android:id="@+id/title_weak"
                 style="@style/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/div_abilities"
                 android:text="@string/match_up" />
 
             <LinearLayout
                 android:id="@+id/linear_weaknesses"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/title_weak"
+                android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -99,10 +103,10 @@
                         android:text="@string/fairy" />
 
                     <TextView
-                        android:id="@+id/tv_fight"
+                        android:id="@+id/tv_fighting"
                         style="@style/TypeTag"
                         android:background="@color/fight"
-                        android:text="@string/fight" />
+                        android:text="@string/fighting" />
 
                     <TextView
                         android:id="@+id/tv_fire"
@@ -186,7 +190,7 @@
 
             </LinearLayout>
 
-        </RelativeLayout>
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
 </FrameLayout>
