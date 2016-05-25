@@ -2,10 +2,12 @@ package cl.mycompany.dexapplication.API;
 
 import cl.mycompany.dexapplication.model.abilityModel.Ability;
 import cl.mycompany.dexapplication.model.evolutionChainModel.EvolutionChain;
+import cl.mycompany.dexapplication.model.moveModel.Move;
 import cl.mycompany.dexapplication.model.pokemonModel.Pokemon;
 import cl.mycompany.dexapplication.model.specieModel.Specie;
 import cl.mycompany.dexapplication.model.typeModel.Type;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
@@ -28,4 +30,7 @@ public interface PokeApi {
 
     @GET("evolution-chain/{number}")
     Call<EvolutionChain> getEvoChain(@Path("number") String number);
+
+    @GET("move/{number}")
+    Call<Move> getMove(@Path("number") String number);
 }

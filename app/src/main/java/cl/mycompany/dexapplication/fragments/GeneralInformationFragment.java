@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import cl.mycompany.dexapplication.API.ClientPokeApi;
 import cl.mycompany.dexapplication.API.PokeApi;
@@ -197,6 +198,7 @@ public class GeneralInformationFragment extends Fragment {
                             Chain evoChain = response.body().getChain();
                             String[] evolutionaryList= supportFunctions.getEvoList(evoChain);
                             evoChainGrid.setAdapter(new EvoChainGridAdapter(getContext(), evolutionaryList));
+                            evoChainGrid.setNumColumns(evolutionaryList.length);
                         }
                     }
 

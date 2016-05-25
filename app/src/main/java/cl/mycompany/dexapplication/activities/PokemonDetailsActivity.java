@@ -10,17 +10,21 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Hashtable;
 import java.util.List;
+import java.util.TreeMap;
 
 import cl.mycompany.dexapplication.API.ClientPokeApi;
 import cl.mycompany.dexapplication.API.PokeApi;
 import cl.mycompany.dexapplication.R;
 import cl.mycompany.dexapplication.adapters.PokemonDetailsPagerAdapter;
 import cl.mycompany.dexapplication.fragments.GeneralInformationFragment;
+import cl.mycompany.dexapplication.fragments.LevelUpMovesFragment;
 import cl.mycompany.dexapplication.model.pokemonModel.Ability;
 import cl.mycompany.dexapplication.model.pokemonModel.Pokemon;
 import cl.mycompany.dexapplication.model.pokemonModel.Species;
@@ -42,6 +46,7 @@ public class PokemonDetailsActivity extends FragmentActivity{
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private PokemonDetailsPagerAdapter detailsAdapter = new PokemonDetailsPagerAdapter(getSupportFragmentManager());
+    private Hashtable<Integer, Integer> mMoveList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +104,8 @@ public class PokemonDetailsActivity extends FragmentActivity{
                 if(response.isSuccessful()) {
                     Pokemon pokemon = response.body();
                     bindBaseInfo(pokemon);
-                    inflateFragment(pokemon.getAbilities(), pokemon.getTypes(),pokemon.getSpecies());
+                    mMoveList = supportFunctions.getLevelUpmoves(pokemon.getMoves());
+                    inflateFragment(pokemon.getAbilities(), pokemon.getTypes(), pokemon.getSpecies());
                 }
 
             }
@@ -179,8 +185,11 @@ public class PokemonDetailsActivity extends FragmentActivity{
             int id = supportFunctions.getIdFromURL(type.getType().getUrl());
             typesID[type.getSlot()-1] = id;
         }
-        Fragment fragment = detailsAdapter.getFragment(tabLayout.getSelectedTabPosition());
-        ((GeneralInformationFragment) fragment).onRefresh(abilitiesID,hiddenAbilityID,typesID, specieID);
+        int position = tabLayout.getSelectedTabPosition();
+        Fragment generalInformation = detailsAdapter.getFragment(0);
+        Fragment levelUp = detailsAdapter.getFragment(1);
+        ((GeneralInformationFragment) generalInformation).onRefresh(abilitiesID,hiddenAbilityID,typesID, specieID);
+        ((LevelUpMovesFragment) levelUp).onRefresh(mMoveList);
 
     }
 
@@ -207,6 +216,4 @@ public class PokemonDetailsActivity extends FragmentActivity{
         });
 
     }
-
-
 }

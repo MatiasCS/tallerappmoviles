@@ -1,7 +1,7 @@
 package cl.mycompany.dexapplication.fragments;
 
-import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,12 +9,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.TreeMap;
 
+import cl.mycompany.dexapplication.API.ClientPokeApi;
+import cl.mycompany.dexapplication.API.PokeApi;
 import cl.mycompany.dexapplication.R;
+import cl.mycompany.dexapplication.adapters.AbilityListAdapter;
 import cl.mycompany.dexapplication.adapters.MovesAdapter;
-import cl.mycompany.dexapplication.model.Move;
+import cl.mycompany.dexapplication.model.abilityModel.Ability;
+import cl.mycompany.dexapplication.model.moveModel.Move;
+import cl.mycompany.dexapplication.utils.supportFunctions;
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,13 +45,10 @@ public class LevelUpMovesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Hashtable<Integer,Integer> mMoveIDList;
+    private List<Move> mMovesList;
 
     private OnFragmentInteractionListener mListener;
-
-    ArrayList<Move> moves = new ArrayList<>();
-    Move move1 = new Move("Sand Attack", "GROUND", 15, 0, 100, 5,"Hola mundo");
-    Move move2 = new Move("Thunder Shock", "ELECTRIC", 30, 40, 100, 9,"Hola mundo");
-    Move move3 = new Move("Quick Attack", "NORMAL", 30, 40, 100, 13,"Hola mundo");
 
     public LevelUpMovesFragment() {
         // Required empty public constructor
@@ -77,7 +86,6 @@ public class LevelUpMovesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_level_up_moves, container, false);
-        setMoveList(fragment);
         return fragment;
     }
 
@@ -120,24 +128,61 @@ public class LevelUpMovesFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void setMoveList(View fragment){
-        //Recycler View params
-        RecyclerView recycler;
-        RecyclerView.Adapter adapter;
-        RecyclerView.LayoutManager lManager;
+    public void setMoveList(){
+        setLevelUpMovesTask task = new setLevelUpMovesTask();
+        task.execute();
 
-        moves.add(move1);
-        moves.add(move2);
-        moves.add(move3);
+    }
 
-        recycler = (RecyclerView) fragment.findViewById(R.id.rv_moves);
-        recycler.setHasFixedSize(true);
+    public void onRefresh(Hashtable<Integer,Integer> levelUpMovesList){
+        mMoveIDList = levelUpMovesList;
+        setMoveList();
+    }
 
-        lManager = new LinearLayoutManager(fragment.getContext());
-        recycler.setLayoutManager(lManager);
+    private class setLevelUpMovesTask extends AsyncTask<Void, Void,
+            List<Move>> {
+        Retrofit retrofit;
 
-        adapter = new MovesAdapter(moves);
-        recycler.setAdapter(adapter);
+        @Override
+        protected void onPreExecute() {
+            retrofit = ClientPokeApi.getClient();
+        }
 
+        @Override
+        protected List<Move> doInBackground(Void... params) {
+            PokeApi restApi = retrofit.create(PokeApi.class);
+            mMovesList = new ArrayList<>();
+            for (Hashtable.Entry<Integer,Integer> entry : mMoveIDList.entrySet()) {
+                Call<Move> call = restApi.getMove(String.valueOf(String.valueOf(entry.getKey())));
+                try {
+                    Move response = call.execute().body();
+                    response.setLevelLearned(entry.getValue());
+                    mMovesList.add(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return mMovesList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Move> levelUpMoves){
+
+            //Recycler View params
+            RecyclerView recycler;
+            RecyclerView.Adapter adapter;
+            RecyclerView.LayoutManager lManager;
+
+            recycler = (RecyclerView) getView().findViewById(R.id.rv_moves);
+            recycler.setHasFixedSize(true);
+
+            lManager = new LinearLayoutManager(getView().getContext());
+            recycler.setLayoutManager(lManager);
+
+            adapter = new MovesAdapter(levelUpMoves);
+            recycler.setAdapter(adapter);
+
+        }
     }
 }
