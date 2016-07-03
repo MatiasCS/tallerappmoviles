@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import cl.mycompany.dexapplication.R;
+import cl.mycompany.dexapplication.database.DatabaseHandler;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -62,6 +63,12 @@ public class StartActivity extends AppCompatActivity {
                     case POKEDEX_OPTION:
                         intent = new Intent(StartActivity.this,
                                 PokedexActivity.class);
+                        startActivity(intent);
+                        break;
+
+                    case ATTACKDEX_OPTION:
+                        intent = new Intent(StartActivity.this,
+                                AttackdexActivity.class);
                         startActivity(intent);
                         break;
 

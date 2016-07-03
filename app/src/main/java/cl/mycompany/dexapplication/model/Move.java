@@ -4,38 +4,40 @@ package cl.mycompany.dexapplication.model;
  * Created by Matias on 5/4/2016.
  */
 public class Move {
+    private int number;
     private String name;
     private String type;
     private int PP;
-    private int attack;
-    private int accuaracy;
-    private int levelLearned;
-    private String description;
+    private int power;
+    private int accuracy;
 
-    public Move(String name, String type, int PP, int attack, int accuaracy, int levelLearned, String description) {
+    public Move(int number, String name, String type, int PP, int power, int accuracy) {
+        this.number = number;
         this.name = name;
         this.type = type;
         this.PP = PP;
-        this.attack = attack;
-        this.accuaracy = accuaracy;
-        this.levelLearned = levelLearned;
-        this.description = description;
+        this.power = power;
+        this.accuracy = accuracy;
     }
 
-    public String getName() {
-        return name;
+    public int getNumber() {
+        return number;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getAccuracy() {
+        return accuracy;
     }
 
-    public String getType() {
-        return type;
+    public void setAccuracy(int accuracy) {
+        this.accuracy = accuracy;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
     }
 
     public int getPP() {
@@ -46,35 +48,23 @@ public class Move {
         this.PP = PP;
     }
 
-    public int getAttack() {
-        return attack;
+    public String getType() {
+        return type;
     }
 
-    public void setAttack(int attack) {
-        this.attack = attack;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public int getAccuaracy() {
-        return accuaracy;
+    public String getName() {
+        return name;
     }
 
-    public void setAccuaracy(int accuaracy) {
-        this.accuaracy = accuaracy;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getLevelLearned() {
-        return levelLearned;
-    }
-
-    public void setLevelLearned(int levelLearned) {
-        this.levelLearned = levelLearned;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

@@ -41,11 +41,12 @@ public class LevelUpMovesFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private final Fragment thisFragment= this;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Hashtable<Integer,Integer> mMoveIDList;
+    private List<int []> mMoveIDList;
     private List<Move> mMovesList;
 
     private OnFragmentInteractionListener mListener;
@@ -134,7 +135,7 @@ public class LevelUpMovesFragment extends Fragment {
 
     }
 
-    public void onRefresh(Hashtable<Integer,Integer> levelUpMovesList){
+    public void onRefresh(List<int[]> levelUpMovesList){
         mMoveIDList = levelUpMovesList;
         setMoveList();
     }
@@ -152,11 +153,11 @@ public class LevelUpMovesFragment extends Fragment {
         protected List<Move> doInBackground(Void... params) {
             PokeApi restApi = retrofit.create(PokeApi.class);
             mMovesList = new ArrayList<>();
-            for (Hashtable.Entry<Integer,Integer> entry : mMoveIDList.entrySet()) {
-                Call<Move> call = restApi.getMove(String.valueOf(String.valueOf(entry.getKey())));
+            for (int[] entry : mMoveIDList) {
+                Call<Move> call = restApi.getMove(String.valueOf(String.valueOf(entry[0])));
                 try {
                     Move response = call.execute().body();
-                    response.setLevelLearned(entry.getValue());
+                    response.setLevelLearned(entry[1]);
                     mMovesList.add(response);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -182,6 +183,8 @@ public class LevelUpMovesFragment extends Fragment {
 
             adapter = new MovesAdapter(levelUpMoves);
             recycler.setAdapter(adapter);
+
+            //TODO: IMPLEMENTAR CLICK LISTENER
 
         }
     }

@@ -1,8 +1,6 @@
 package cl.mycompany.dexapplication.fragments;
 
-import android.app.ActionBar;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,29 +9,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import cl.mycompany.dexapplication.API.ClientPokeApi;
 import cl.mycompany.dexapplication.API.PokeApi;
 import cl.mycompany.dexapplication.R;
 import cl.mycompany.dexapplication.adapters.AbilityListAdapter;
 import cl.mycompany.dexapplication.adapters.EvoChainGridAdapter;
-import cl.mycompany.dexapplication.adapters.PokemonListAdapter;
 import cl.mycompany.dexapplication.interfaces.IFragmentToActivity;
-import cl.mycompany.dexapplication.model.Pokemon;
 import cl.mycompany.dexapplication.model.abilityModel.Ability;
 import cl.mycompany.dexapplication.model.evolutionChainModel.Chain;
 import cl.mycompany.dexapplication.model.evolutionChainModel.EvolutionChain;
-import cl.mycompany.dexapplication.model.evolutionChainModel.EvolvesTo;
 import cl.mycompany.dexapplication.model.specieModel.Specie;
 import cl.mycompany.dexapplication.model.typeModel.DoubleDamageFrom;
 import cl.mycompany.dexapplication.model.typeModel.HalfDamageFrom;

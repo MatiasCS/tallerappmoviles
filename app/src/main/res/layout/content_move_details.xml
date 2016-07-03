@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:orientation="vertical"
+    tools:context="cl.mycompany.dexapplication.activities.MoveDetailsActivity"
+    tools:showIn="@layout/activity_move_details">
+    <RelativeLayout
+        android:id="@+id/layout_pokemon_stats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blackbackground"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/abstract_pokeball"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/pokeball_icon" />
+
+        <TextView
+            android:id="@+id/tv_move_type"
+            style="@style/StatsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/abstract_pokeball"
+            tools:text="ELECTRIC" />
+
+        <TextView
+            android:id="@+id/tv_move_category2"
+            style="@style/StatsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_move_type"
+            tools:text="- physical" />
+
+        <View
+            style="@style/WhiteDivider"
+            android:layout_below="@id/tv_move_type"
+            android:id="@+id/view" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/abstract_pokeball"
+            android:layout_below="@id/tv_move_type">
+            <LinearLayout
+                android:id="@+id/linear_first_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_move_attack"
+                    style="@style/StatsText"
+                    android:text="@string/power" />
+
+                <TextView
+                    android:id="@+id/tv_move_attack_value"
+                    style="@style/StatsValue"
+                    tools:text="65" />
+
+                <TextView
+                    android:id="@+id/tv_move_pp"
+                    style="@style/StatsText"
+                    android:text="@string/pp" />
+
+                <TextView
+                    android:id="@+id/tv_move_pp_value"
+                    style="@style/StatsValue"
+                    tools:text="60" />
+
+                <TextView
+                    android:id="@+id/tv_move_accuracy"
+                    style="@style/StatsText"
+                    android:text="@string/accuracy" />
+
+                <TextView
+                    android:id="@+id/tv_move_accuracy_value"
+                    style="@style/StatsValue"
+                    tools:text="65" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/title_description"
+                style="@style/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/description" />
+
+            <TextView
+                android:id="@+id/tv_move_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/div_description"
+                style="@style/Divider" />
+
+            <TextView
+                android:id="@+id/title_effect"
+                style="@style/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/effect" />
+
+            <TextView
+                android:id="@+id/tv_move_effect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/div_effect"
+                style="@style/Divider" />
+
+            <TextView
+                android:id="@+id/title_weak"
+                style="@style/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/match_up" />
+
+            <LinearLayout
+                android:id="@+id/linear_weaknesses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_bug"
+                        style="@style/TypeTag"
+                        android:background="@color/bug"
+                        android:text="@string/bug" />
+
+                    <TextView
+                        android:id="@+id/tv_dark"
+                        style="@style/TypeTag"
+                        android:background="@color/dark"
+                        android:text="@string/dark" />
+
+                    <TextView
+                        android:id="@+id/tv_dragon"
+                        style="@style/TypeTag"
+                        android:background="@color/dragon"
+                        android:text="@string/dragon" />
+
+                    <TextView
+                        android:id="@+id/tv_electric"
+                        style="@style/TypeTag"
+                        android:background="@color/electric"
+                        android:text="@string/electric" />
+
+                    <TextView
+                        android:id="@+id/tv_fairy"
+                        style="@style/TypeTag"
+                        android:background="@color/fairy"
+                        android:text="@string/fairy" />
+
+                    <TextView
+                        android:id="@+id/tv_fighting"
+                        style="@style/TypeTag"
+                        android:background="@color/fighting"
+                        android:text="@string/fighting" />
+
+                    <TextView
+                        android:id="@+id/tv_fire"
+                        style="@style/TypeTag"
+                        android:background="@color/fire"
+                        android:text="@string/fire" />
+
+                    <TextView
+                        android:id="@+id/tv_flying"
+                        style="@style/TypeTag"
+                        android:background="@color/flying"
+                        android:text="@string/flying" />
+
+                    <TextView
+                        android:id="@+id/tv_ghost"
+                        style="@style/TypeTag"
+                        android:background="@color/ghost"
+                        android:text="@string/ghost" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_grass"
+                        style="@style/TypeTag"
+                        android:background="@color/grass"
+                        android:text="@string/grass" />
+
+                    <TextView
+                        android:id="@+id/tv_ground"
+                        style="@style/TypeTag"
+                        android:background="@color/ground"
+                        android:text="@string/ground" />
+
+                    <TextView
+                        android:id="@+id/tv_ice"
+                        style="@style/TypeTag"
+                        android:background="@color/ice"
+                        android:text="@string/ice" />
+
+                    <TextView
+                        android:id="@+id/tv_normal"
+                        style="@style/TypeTag"
+                        android:background="@color/normal"
+                        android:text="@string/normal" />
+
+                    <TextView
+                        android:id="@+id/tv_poison"
+                        style="@style/TypeTag"
+                        android:background="@color/poison"
+                        android:text="@string/poison" />
+
+                    <TextView
+                        android:id="@+id/tv_psychic"
+                        style="@style/TypeTag"
+                        android:background="@color/psychic"
+                        android:text="@string/psychic" />
+
+                    <TextView
+                        android:id="@+id/tv_rock"
+                        style="@style/TypeTag"
+                        android:background="@color/rock"
+                        android:text="@string/rock" />
+
+                    <TextView
+                        android:id="@+id/tv_steel"
+                        style="@style/TypeTag"
+                        android:background="@color/steel"
+                        android:text="@string/steel" />
+
+                    <TextView
+                        android:id="@+id/tv_water"
+                        style="@style/TypeTag"
+                        android:background="@color/water"
+                        android:text="@string/water" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

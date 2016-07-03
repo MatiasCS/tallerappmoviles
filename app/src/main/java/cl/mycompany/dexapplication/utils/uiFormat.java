@@ -21,8 +21,11 @@ import cl.mycompany.dexapplication.model.evolutionChainModel.Chain;
 import cl.mycompany.dexapplication.model.evolutionChainModel.EvolvesTo;
 import cl.mycompany.dexapplication.model.typeModel.DamageRelations;
 import cl.mycompany.dexapplication.model.typeModel.DoubleDamageFrom;
+import cl.mycompany.dexapplication.model.typeModel.DoubleDamageTo;
 import cl.mycompany.dexapplication.model.typeModel.HalfDamageFrom;
+import cl.mycompany.dexapplication.model.typeModel.HalfDamageTo;
 import cl.mycompany.dexapplication.model.typeModel.NoDamageFrom;
+import cl.mycompany.dexapplication.model.typeModel.NoDamageTo;
 
 /**
  * Created by Matias on 5/21/2016.
@@ -65,7 +68,7 @@ public class uiFormat {
     }
 
     public static Map<String ,String> timesEffectiveFromMonoTyping(List<DoubleDamageFrom> times2, List<HalfDamageFrom> timesHalf,
-                                                                   List<NoDamageFrom> times0){
+                                                                        List<NoDamageFrom> times0){
         Map <String, String> weaknesses = new Hashtable<String,String>();
 
         for(DoubleDamageFrom type : times2)
@@ -75,6 +78,22 @@ public class uiFormat {
             weaknesses.put(type.getName(),"X1/2");
 
         for(NoDamageFrom type: times0)
+            weaknesses.put(type.getName(),"X0");
+
+        return weaknesses;
+    }
+
+    public static Map<String ,String> timesEffectiveTo(List<DoubleDamageTo> times2, List<HalfDamageTo> timesHalf,
+                                                                   List<NoDamageTo> times0){
+        Map <String, String> weaknesses = new Hashtable<String,String>();
+
+        for(DoubleDamageTo type : times2)
+            weaknesses.put(type.getName(),"X2");
+
+        for(HalfDamageTo type : timesHalf)
+            weaknesses.put(type.getName(),"X1/2");
+
+        for(NoDamageTo type: times0)
             weaknesses.put(type.getName(),"X0");
 
         return weaknesses;

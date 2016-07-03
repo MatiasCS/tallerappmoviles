@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.PokedexActivity"
+    tools:showIn="@layout/activity_attackdex"
+    android:background="@color/graybackground">
+
+    <TextView
+        android:paddingLeft="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blackbackground"
+        android:text="@string/kanto_region"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_moves"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+    </android.support.v7.widget.RecyclerView>
+
+    <!--ListView
+        android:id="@+id/move_list"
+        style="@style/CustomListDiv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"/-->
+
+
+</LinearLayout>

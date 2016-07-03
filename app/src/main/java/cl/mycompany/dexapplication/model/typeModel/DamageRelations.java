@@ -18,7 +18,7 @@ public class DamageRelations {
     private List<HalfDamageTo> halfDamageTo = new ArrayList<HalfDamageTo>();
     @SerializedName("double_damage_to")
     @Expose
-    private List<Object> doubleDamageTo = new ArrayList<Object>();
+    private List<DoubleDamageTo> doubleDamageTo = new ArrayList<DoubleDamageTo>();
     @SerializedName("no_damage_from")
     @Expose
     private List<NoDamageFrom> noDamageFrom = new ArrayList<NoDamageFrom>();
@@ -66,20 +66,20 @@ public class DamageRelations {
     }
 
     /**
-     * 
+     *
      * @return
      *     The doubleDamageTo
      */
-    public List<Object> getDoubleDamageTo() {
+    public List<DoubleDamageTo> getDoubleDamageTo() {
         return doubleDamageTo;
     }
 
     /**
-     * 
+     *
      * @param doubleDamageTo
      *     The double_damage_to
      */
-    public void setDoubleDamageTo(List<Object> doubleDamageTo) {
+    public void setDoubleDamageTo(List<DoubleDamageTo> doubleDamageTo) {
         this.doubleDamageTo = doubleDamageTo;
     }
 

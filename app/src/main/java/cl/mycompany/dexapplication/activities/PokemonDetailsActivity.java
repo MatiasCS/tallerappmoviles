@@ -10,14 +10,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Hashtable;
 import java.util.List;
-import java.util.TreeMap;
 
 import cl.mycompany.dexapplication.API.ClientPokeApi;
 import cl.mycompany.dexapplication.API.PokeApi;
@@ -46,7 +42,7 @@ public class PokemonDetailsActivity extends FragmentActivity{
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private PokemonDetailsPagerAdapter detailsAdapter = new PokemonDetailsPagerAdapter(getSupportFragmentManager());
-    private Hashtable<Integer, Integer> mMoveList;
+    private List<int[]> mMoveList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

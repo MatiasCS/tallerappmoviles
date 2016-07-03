@@ -45,7 +45,7 @@ public class Pokemon {
     private List<Object> heldItems = new ArrayList<Object>();
     @SerializedName("location_area_encounters")
     @Expose
-    private List<Object> locationAreaEncounters = new ArrayList<Object>();
+    private String locationAreaEncounters;
     @SerializedName("moves")
     @Expose
     private List<Move> moves = new ArrayList<Move>();
@@ -258,20 +258,20 @@ public class Pokemon {
     }
 
     /**
-     * 
+     *
      * @return
-     *     The locationAreaEncounters
+     * The locationAreaEncounters
      */
-    public List<Object> getLocationAreaEncounters() {
+    public String getLocationAreaEncounters() {
         return locationAreaEncounters;
     }
 
     /**
-     * 
+     *
      * @param locationAreaEncounters
-     *     The location_area_encounters
+     * The location_area_encounters
      */
-    public void setLocationAreaEncounters(List<Object> locationAreaEncounters) {
+    public void setLocationAreaEncounters(String locationAreaEncounters) {
         this.locationAreaEncounters = locationAreaEncounters;
     }
 
