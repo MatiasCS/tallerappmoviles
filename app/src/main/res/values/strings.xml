@@ -45,4 +45,6 @@
     <string name="title_activity_hidding_bar">HiddingBarActivity</string>
     <string name="title_activity_attackdex">AttackdexActivity</string>
     <string name="title_activity_move_details"></string>
+    <string name="title_activity_abilitydex">AbilitydexActivity</string>
+    <string name="title_activity_ability_details"></string>
 </resources>

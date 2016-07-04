@@ -48,12 +48,12 @@ public class AbilityListAdapter extends ArrayAdapter <Ability> {
         String abilityTitle;
 
         if(ability.getId() == hiddenAbilityID) {
-            abilityTitle = ability.getName() + " (hidden)";
+            abilityTitle = ability.getName().toUpperCase().replace("-", " ") + " (hidden)";
             tvAbilityType.setText(abilityTitle);
             tvAbilityType.setBackgroundColor(Color.parseColor(RED_BACKGROUND));
         }
         else
-            abilityTitle = ability.getName() + " (regular)";
+            abilityTitle = ability.getName().toUpperCase().replace("-", " ") + " (regular)";
             tvAbilityType.setText(abilityTitle);
             tvAbilityType.setText(abilityTitle);
 

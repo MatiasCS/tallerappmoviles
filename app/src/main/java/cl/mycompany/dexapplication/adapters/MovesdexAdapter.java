@@ -106,7 +106,7 @@ public class MovesdexAdapter extends RecyclerView.Adapter<MovesdexAdapter.MoveHo
                 intent = new Intent(v.getContext(),
                         MoveDetailsActivity.class);
                 intent.putExtra("index", moves[i].getNumber());
-                intent.putExtra("name", moves[i].getName());
+                intent.putExtra("name", moves[i].getName().toUpperCase());
                 intent.putExtra("type", moves[i].getType());
                 intent.putExtra("accuracy", moves[i].getAccuracy());
                 intent.putExtra("pp", moves[i].getPP());

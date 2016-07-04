@@ -18,7 +18,7 @@ public class StartActivity extends AppCompatActivity {
 
     public static final int POKEDEX_OPTION = 0;
     public static final int ATTACKDEX_OPTION = 1;
-    public static final int ITEMDEX_OPTION = 2;
+    public static final int ABILITYDEX_OPTION = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +69,11 @@ public class StartActivity extends AppCompatActivity {
                     case ATTACKDEX_OPTION:
                         intent = new Intent(StartActivity.this,
                                 AttackdexActivity.class);
+                        startActivity(intent);
+                        break;
+                    case ABILITYDEX_OPTION:
+                        intent = new Intent(StartActivity.this,
+                                AbilitydexActivity.class);
                         startActivity(intent);
                         break;
 

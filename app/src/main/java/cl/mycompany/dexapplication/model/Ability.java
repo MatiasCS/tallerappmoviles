@@ -4,14 +4,30 @@ package cl.mycompany.dexapplication.model;
  * Created by Matias on 4/22/2016.
  */
 public class Ability {
+    int index;
     String name;
     String description;
-    int hidden;
 
-    public Ability(String name, String description, int hidden) {
+    public Ability(int index, String name, String description) {
         this.name = name;
+        this.index = index;
         this.description = description;
-        this.hidden = hidden;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public String getName() {
@@ -23,19 +39,4 @@ public class Ability {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getHidden() {
-        return hidden;
-    }
-
-    public void setHidden(int hidden) {
-        this.hidden = hidden;
-    }
 }

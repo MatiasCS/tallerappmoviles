@@ -1,6 +1,7 @@
 package cl.mycompany.dexapplication.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import cl.mycompany.dexapplication.R;
+import cl.mycompany.dexapplication.activities.MoveDetailsActivity;
 import cl.mycompany.dexapplication.fragments.MoveDescription;
 import cl.mycompany.dexapplication.model.moveModel.Move;
 
@@ -82,7 +84,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.MoveHolder>{
     }
 
     @Override
-    public void onBindViewHolder(MoveHolder viewHolder, int i) {
+    public void onBindViewHolder(MoveHolder viewHolder, final int i) {
         Move move = moves.get(i);
         String attack =  String.valueOf(move.getPower());
         String pp = String.valueOf(move.getPp());
@@ -94,7 +96,7 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.MoveHolder>{
             attack = "-";
 
         viewHolder.name.setText(moves.get(i).getName().toUpperCase());
-        viewHolder.type.setText(moves.get(i).getType().getName().toUpperCase());
+        viewHolder.type.setText(moves.get(i).getType().getName().toUpperCase().replace("-", " "));
 
         viewHolder.levelLearned.setText(String.valueOf(move.getLevelLearned()));
 
@@ -107,5 +109,21 @@ public class MovesAdapter extends RecyclerView.Adapter<MovesAdapter.MoveHolder>{
         viewHolder.accuracy.setText(accuracyText);
         int typeColor = viewHolder.view.getResources().getIdentifier(moves.get(i).getType().getName(), "color", "cl.mycompany.dexapplication");
         viewHolder.backgroundColor.setBackgroundResource(typeColor);
+
+        viewHolder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                intent = new Intent(v.getContext(),
+                        MoveDetailsActivity.class);
+                intent.putExtra("index", moves.get(i).getId());
+                intent.putExtra("name", moves.get(i).getName().toUpperCase().replace("-", " "));
+                intent.putExtra("type", moves.get(i).getType().getName());
+                intent.putExtra("accuracy", moves.get(i).getAccuracy());
+                intent.putExtra("pp", moves.get(i).getPp());
+                intent.putExtra("power", moves.get(i).getPower());
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 }

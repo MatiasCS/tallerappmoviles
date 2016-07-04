@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import cl.mycompany.dexapplication.model.Ability;
 import cl.mycompany.dexapplication.model.Move;
 import cl.mycompany.dexapplication.model.Pokemon;
 
@@ -17,7 +17,7 @@ import cl.mycompany.dexapplication.model.Pokemon;
  * Created by Matias on 5/17/2016.
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
-
+//TODO: crear tabla para habilidad
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -31,6 +31,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Move table name
     private static final String TABLE_MOVES = "moves";
 
+    //Ability table name
+    private static final String TABLE_ABILITIES = "abilities";
+
     // Pokemon Table Columns names
     private static final String KEY_NUMBER = "id_number";
     private static final String KEY_NAME = "name";
@@ -39,9 +42,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_NUMBER_MOVES = "id_number";
     private static final String KEY_NAME_MOVES = "name";
     private static final String KEY_TYPE_MOVES = "type";
-    private static final String KEY_TYPE_PP = "pp";
-    private static final String KEY_TYPE_ATT = "attack";
-    private static final String KEY_TYPE_ACC = "accuracy";
+    private static final String KEY_MOVE_PP = "pp";
+    private static final String KEY_MOVE_ATT = "attack";
+    private static final String KEY_MOVE_ACC = "accuracy";
+
+    //ABILITIES Table Columns names
+    private static final String KEY_ABILITY_NUMBER = "id_number";
+    private static final String KEY_ABILITY_NAME = "name";
+    private static final String KEY_ABILITY_DESCRIPTION = "description";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -52,13 +60,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_POKEMON_TABLE = "CREATE TABLE " + TABLE_POKEMON + "("
                 + KEY_NUMBER + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT" + ")";
+
         String CREATE_MOVES_TABLE = "CREATE TABLE " + TABLE_MOVES+ "("
                 + KEY_NUMBER_MOVES + " INTEGER PRIMARY KEY," + KEY_NAME_MOVES + " TEXT," + KEY_TYPE_MOVES + " TEXT,"
-                + KEY_TYPE_PP + " INTEGER," + KEY_TYPE_ATT + " INTEGER," + KEY_TYPE_ACC + " INTEGER" + ")";
+                + KEY_MOVE_PP + " INTEGER," + KEY_MOVE_ATT + " INTEGER," + KEY_MOVE_ACC + " INTEGER" + ")";
+
+        String CREATE_ABILITIES_TABLE = "CREATE TABLE " + TABLE_ABILITIES + "("
+                + KEY_ABILITY_NUMBER + " INTEGER PRIMARY KEY," + KEY_ABILITY_NAME + " TEXT," + KEY_ABILITY_DESCRIPTION + " TEXT" +")";
         db.execSQL(CREATE_POKEMON_TABLE);
         db.execSQL(CREATE_MOVES_TABLE);
+        db.execSQL(CREATE_ABILITIES_TABLE);
         fillDatabasePokemon(db);
         fillDatabaseMove(db);
+        fillAbilityTable(db);
         //db.close();
     }
 
@@ -68,6 +82,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_POKEMON);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ABILITIES);
 
         // Create tables again
         onCreate(db);
@@ -86,15 +101,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Adding new contact
+    public void addAbility(Ability ability, SQLiteDatabase db) {
+        //SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_ABILITY_NAME, ability.getName());
+        values.put(KEY_ABILITY_DESCRIPTION, ability.getDescription());
+
+        // Inserting Row
+        db.insert(TABLE_ABILITIES, null, values);
+        //db.close(); // Closing database connection
+    }
+
+
+    // Adding new contact
     public void addMove(Move move, SQLiteDatabase db) {
         //SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME_MOVES, move.getName());
         values.put(KEY_TYPE_MOVES, move.getType());
-        values.put(KEY_TYPE_PP,move.getPP());
-        values.put(KEY_TYPE_ATT,move.getPower());
-        values.put(KEY_TYPE_ACC,move.getAccuracy());
+        values.put(KEY_MOVE_PP,move.getPP());
+        values.put(KEY_MOVE_ATT,move.getPower());
+        values.put(KEY_MOVE_ACC, move.getAccuracy());
 
         // Inserting Row
         db.insert(TABLE_MOVES, null, values);
@@ -117,6 +146,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //db.close();
         // return contact
         return pokemon;
+    }
+
+    // Getting single contact
+    public Ability getAbility(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_ABILITIES, new String[] { KEY_ABILITY_NUMBER,
+                        KEY_ABILITY_NAME}, KEY_ABILITY_NUMBER + "=?",
+                new String[] { String.valueOf(id) }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Ability ability = new Ability(cursor.getInt(0),
+                cursor.getString(1),cursor.getString(2));
+        cursor.close();
+        //db.close();
+        // return contact
+        return ability;
     }
 
     // Getting single contact
@@ -162,6 +209,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         cursor.close();
         //db.close();
         return pokemonList;
+    }
+
+    // Getting All Contacts
+    public ArrayList<Ability> getAllAbilities() {
+
+        ArrayList<Ability> abilityList = new ArrayList<Ability>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_ABILITIES + " ORDER BY " + KEY_ABILITY_NAME;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                int number = cursor.getInt(0);
+                String name = cursor.getString(1);
+                String description = cursor.getString(2);
+                Ability ability= new Ability(number,name,description);
+                // Adding contact to list
+                abilityList.add(ability);
+            } while (cursor.moveToNext());
+        }
+
+        // return contact list
+        cursor.close();
+        //db.close();
+        return abilityList;
     }
 
     // Getting All Contacts
@@ -391,7 +466,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(35,"Wrap","Normal",20,15,90),db);
         addMove(new Move(36,"Take Down","Normal",20,90,85),db);
         addMove(new Move(37,"Thrash","Normal",10,120,100),db);
-        addMove(new Move(38,"Double0Edge","Normal",15,120,100),db);
+        addMove(new Move(38,"Double Edge","Normal",15,120,100),db);
         addMove(new Move(39,"Tail Whip","Normal",30,0,100),db);
         addMove(new Move(40,"Poison Sting","Poison",35,15,100),db);
         addMove(new Move(41,"Twineedle","Bug",20,25,100),db);
@@ -473,7 +548,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(117,"Bide","Normal",10,0,100),db);
         addMove(new Move(118,"Metronome","Normal",10,0,0),db);
         addMove(new Move(119,"Mirror Move","Flying",20,0,0),db);
-        addMove(new Move(120,"Self0Destruct","Normal",5,200,100),db);
+        addMove(new Move(120,"Self Destruct","Normal",5,200,100),db);
         addMove(new Move(121,"Egg Bomb","Normal",10,100,75),db);
         addMove(new Move(122,"Lick","Ghost",30,30,100),db);
         addMove(new Move(123,"Smog","Poison",20,30,70),db);
@@ -488,7 +563,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(132,"Constrict","Normal",35,10,100),db);
         addMove(new Move(133,"Amnesia","Psychic",20,0,0),db);
         addMove(new Move(134,"Kinesis","Psychic",15,0,80),db);
-        addMove(new Move(135,"Soft0Boiled","Normal",10,0,0),db);
+        addMove(new Move(135,"Soft Boiled","Normal",10,0,0),db);
         addMove(new Move(136,"High Jump Kick","Fighting",10,130,90),db);
         addMove(new Move(137,"Glare","Normal",30,0,100),db);
         addMove(new Move(138,"Dream Eater","Psychic",15,100,100),db);
@@ -542,7 +617,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(186,"Sweet Kiss","Fairy",10,0,75),db);
         addMove(new Move(187,"Belly Drum","Normal",10,0,0),db);
         addMove(new Move(188,"Sludge Bomb","Poison",10,90,100),db);
-        addMove(new Move(189,"Mud0Slap","Ground",10,20,100),db);
+        addMove(new Move(189,"Mud Slap","Ground",10,20,100),db);
         addMove(new Move(190,"Octazooka","Water",10,65,85),db);
         addMove(new Move(191,"Spikes","Ground",20,0,0),db);
         addMove(new Move(192,"Zap Cannon","Electric",5,120,50),db);
@@ -552,7 +627,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(196,"Icy Wind","Ice",15,55,95),db);
         addMove(new Move(197,"Detect","Fighting",5,0,0),db);
         addMove(new Move(198,"Bone Rush","Ground",10,25,90),db);
-        addMove(new Move(199,"Lock0On","Normal",5,0,100),db);
+        addMove(new Move(199,"Lock On","Normal",5,0,100),db);
         addMove(new Move(200,"Outrage","Dragon",10,120,100),db);
         addMove(new Move(201,"Sandstorm","Rock",10,0,0),db);
         addMove(new Move(202,"Giga Drain","Grass",10,75,100),db);
@@ -614,7 +689,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(258,"Hail","Ice",10,0,0),db);
         addMove(new Move(259,"Torment","Dark",15,0,100),db);
         addMove(new Move(260,"Flatter","Dark",15,0,100),db);
-        addMove(new Move(261,"Will0O0Wisp","Fire",15,0,85),db);
+        addMove(new Move(261,"Will O Wisp","Fire",15,0,85),db);
         addMove(new Move(262,"Memento","Dark",10,0,100),db);
         addMove(new Move(263,"Facade","Normal",20,70,100),db);
         addMove(new Move(264,"Focus Punch","Fighting",20,150,100),db);
@@ -711,7 +786,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(355,"Roost","Flying",10,0,0),db);
         addMove(new Move(356,"Gravity","Psychic",5,0,0),db);
         addMove(new Move(357,"Miracle Eye","Psychic",40,0,0),db);
-        addMove(new Move(358,"Wake0Up Slap","Fighting",10,70,100),db);
+        addMove(new Move(358,"Wake Up Slap","Fighting",10,70,100),db);
         addMove(new Move(359,"Hammer Arm","Fighting",10,100,90),db);
         addMove(new Move(360,"Gyro Ball","Steel",5,0,100),db);
         addMove(new Move(361,"Healing Wish","Psychic",10,0,0),db);
@@ -722,7 +797,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(366,"Tailwind","Flying",15,0,0),db);
         addMove(new Move(367,"Acupressure","Normal",30,0,0),db);
         addMove(new Move(368,"Metal Burst","Steel",10,0,100),db);
-        addMove(new Move(369,"U0turn","Bug",20,70,100),db);
+        addMove(new Move(369,"U turn","Bug",20,70,100),db);
         addMove(new Move(370,"Close Combat","Fighting",5,120,100),db);
         addMove(new Move(371,"Payback","Dark",10,50,100),db);
         addMove(new Move(372,"Assurance","Dark",10,60,100),db);
@@ -757,7 +832,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(401,"Aqua Tail","Water",10,90,90),db);
         addMove(new Move(402,"Seed Bomb","Grass",15,80,100),db);
         addMove(new Move(403,"Air Slash","Flying",15,75,95),db);
-        addMove(new Move(404,"X0Scissor","Bug",15,80,100),db);
+        addMove(new Move(404,"X Scissor","Bug",15,80,100),db);
         addMove(new Move(405,"Bug Buzz","Bug",10,90,100),db);
         addMove(new Move(406,"Dragon Pulse","Dragon",10,85,100),db);
         addMove(new Move(407,"Dragon Rush","Dragon",10,100,75),db);
@@ -910,7 +985,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(554,"Ice Burn","Ice",5,140,90),db);
         addMove(new Move(555,"Snarl","Dark",15,55,95),db);
         addMove(new Move(556,"Icicle Crash","Ice",10,85,90),db);
-        addMove(new Move(557,"V0create","Fire",5,180,95),db);
+        addMove(new Move(557,"V create","Fire",5,180,95),db);
         addMove(new Move(558,"Fusion Flare","Fire",5,100,100),db);
         addMove(new Move(559,"Fusion Bolt","Electric",5,100,100),db);
         addMove(new Move(560,"Flying Press","Fighting",10,80,95),db);
@@ -920,16 +995,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(564,"Sticky Web","Bug",20,0,0),db);
         addMove(new Move(565,"Fell Stinger","Bug",25,30,100),db);
         addMove(new Move(566,"Phantom Force","Ghost",10,90,100),db);
-        addMove(new Move(567,"Trick0or0Treat","Ghost",20,0,100),db);
+        addMove(new Move(567,"Trick or Treat","Ghost",20,0,100),db);
         addMove(new Move(568,"Noble Roar","Normal",30,0,100),db);
         addMove(new Move(569,"Ion Deluge","Electric",25,0,0),db);
         addMove(new Move(570,"Parabolic Charge","Electric",20,50,100),db);
         addMove(new Move(571,"Forest's Curse","Grass",20,0,100),db);
         addMove(new Move(572,"Petal Blizzard","Grass",15,90,100),db);
-        addMove(new Move(573,"Freeze0Dry","Ice",20,70,100),db);
+        addMove(new Move(573,"Freeze Dry","Ice",20,70,100),db);
         addMove(new Move(574,"Disarming Voice","Fairy",15,40,0),db);
         addMove(new Move(575,"Parting Shot","Dark",20,0,100),db);
-        addMove(new Move(576,"Topsy0Turvy","Dark",20,0,100),db);
+        addMove(new Move(576,"Topsy Turvy","Dark",20,0,100),db);
         addMove(new Move(577,"Draining Kiss","Fairy",10,50,100),db);
         addMove(new Move(578,"Crafty Shield","Fairy",10,0,0),db);
         addMove(new Move(579,"Flower Shield","Fairy",10,0,0),db);
@@ -961,11 +1036,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(605,"Dazzling Gleam","Fairy",10,80,100),db);
         addMove(new Move(606,"Celebrate","Normal",40,0,0),db);
         addMove(new Move(607,"Hold Hands","Normal",40,0,0),db);
-        addMove(new Move(608,"Baby0Doll Eyes","Fairy",30,0,100),db);
+        addMove(new Move(608,"Baby Doll Eyes","Fairy",30,0,100),db);
         addMove(new Move(609,"Nuzzle","Electric",20,20,100),db);
         addMove(new Move(610,"Hold Back","Normal",40,40,100),db);
         addMove(new Move(611,"Infestation","Bug",20,20,100),db);
-        addMove(new Move(612,"Power0Up Punch","Fighting",20,40,100),db);
+        addMove(new Move(612,"Power Up Punch","Fighting",20,40,100),db);
         addMove(new Move(613,"Oblivion Wing","Flying",10,80,100),db);
         addMove(new Move(614,"Thousand Arrows","Ground",10,90,100),db);
         addMove(new Move(615,"Thousand Waves","Ground",10,90,100),db);
@@ -976,7 +1051,202 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addMove(new Move(620,"Dragon Ascent","Flying",5,120,100),db);
         addMove(new Move(621,"Hyperspace Fury","Dark",5,100,0),db);
 
-
         //db.close();
+    }
+
+    public void fillAbilityTable(SQLiteDatabase db){
+        addAbility(new Ability(1,"Stench","The stench may cause the target to flinch."),db);
+        addAbility(new Ability(2,"Drizzle","The Pokémon makes it rain if it appears in battle."),db);
+        addAbility(new Ability(3,"Speed Boost","The Pokémon's Speed stat is gradually boosted."),db);
+        addAbility(new Ability(4,"Battle Armor","The Pokémon is protected against critical hits."),db);
+        addAbility(new Ability(5,"Sturdy","The Pokémon is protected against 1-hit KO attacks."),db);
+        addAbility(new Ability(6,"Damp","Prevents combatants from self destructing."),db);
+        addAbility(new Ability(7,"Limber","The Pokémon is protected from paralysis."),db);
+        addAbility(new Ability(8,"Sand Veil","Boosts the Pokémon's evasion in a sandstorm."),db);
+        addAbility(new Ability(9,"Static","Contact with the Pokémon may cause paralysis."),db);
+        addAbility(new Ability(10,"Volt Absorb","Restores HP if hit by an Electric-type move."),db);
+        addAbility(new Ability(11,"Water Absorb","Restores HP if hit by a Water-type move."),db);
+        addAbility(new Ability(12,"Oblivious","Prevents the Pokémon from becoming infatuated or falling for taunts*."),db);
+        addAbility(new Ability(13,"Cloud Nine","Eliminates the effects of weather."),db);
+        addAbility(new Ability(14,"Compound Eyes","The Pokémon's accuracy is boosted."),db);
+        addAbility(new Ability(15,"Insomnia","Prevents the Pokémon from falling asleep."),db);
+        addAbility(new Ability(16,"Color Change","Changes the Pokémon's type to the foe’s move."),db);
+        addAbility(new Ability(17,"Immunity","Prevents the Pokémon from getting poisoned."),db);
+        addAbility(new Ability(18,"Flash Fire","Powers up Fire-type moves if hit by a fire move."),db);
+        addAbility(new Ability(19,"Shield Dust","Blocks the added effects of attacks taken."),db);
+        addAbility(new Ability(20,"Own Tempo","Prevents the Pokémon from becoming confused."),db);
+        addAbility(new Ability(21,"Suction Cups","Negates moves that force switching out."),db);
+        addAbility(new Ability(22,"Intimidate","Lowers the foe’s Attack stat."),db);
+        addAbility(new Ability(23,"Shadow Tag","Prevents the foe from escaping."),db);
+        addAbility(new Ability(24,"Rough Skin","Inflicts damage to the foe on contact."),db);
+        addAbility(new Ability(25,"Wonder Guard","Only supereffective moves will hit."),db);
+        addAbility(new Ability(26,"Levitate","Gives full immunity to all Ground-type moves."),db);
+        addAbility(new Ability(27,"Effect Spore","Contact may paralyze, poison, or cause sleep."),db);
+        addAbility(new Ability(28,"Synchronize","Passes on a burn, poison, or paralysis to the foe."),db);
+        addAbility(new Ability(29,"Clear Body","Prevents the Pokémon's stats from being lowered."),db);
+        addAbility(new Ability(30,"Natural Cure","All status problems are healed upon switching out."),db);
+        addAbility(new Ability(31,"Lightning Rod","The Pokémon draws in all Electric-type moves to raise Sp.Atk."),db);
+        addAbility(new Ability(32,"Serene Grace","Boosts the likelihood of added effects appearing."),db);
+        addAbility(new Ability(33,"Swift Swim","Boosts the Pokémon's Speed in rain."),db);
+        addAbility(new Ability(34,"Chlorophyll","Boosts the Pokémon's Speed in sunshine."),db);
+        addAbility(new Ability(35,"Illuminate","Raises the likelihood of meeting wild Pokémon."),db);
+        addAbility(new Ability(36,"Trace","The Pokémon copies a foe's Ability."),db);
+        addAbility(new Ability(37,"Huge Power","Raises the Pokémon's Attack stat."),db);
+        addAbility(new Ability(38,"Poison Point","Contact with the Pokémon may poison the foe."),db);
+        addAbility(new Ability(39,"Inner Focus","The Pokémon is protected from flinching."),db);
+        addAbility(new Ability(40,"Magma Armor","Prevents the Pokémon from becoming frozen."),db);
+        addAbility(new Ability(41,"Water Veil","Prevents the Pokémon from getting a burn."),db);
+        addAbility(new Ability(42,"Magnet Pull","Prevents Steel-type Pokémon from escaping."),db);
+        addAbility(new Ability(43,"Soundproof","Gives full immunity to all sound-based moves."),db);
+        addAbility(new Ability(44,"Rain Dish","The Pokémon gradually recovers HP in rain."),db);
+        addAbility(new Ability(45,"Sand Stream","The Pokémon summons a sandstorm in battle."),db);
+        addAbility(new Ability(46,"Pressure","The Pokémon raises the foe’s PP usage."),db);
+        addAbility(new Ability(47,"Thick Fat","Raises resistance to Fire- and Ice-type moves."),db);
+        addAbility(new Ability(48,"Early Bird","The Pokémon awakens quickly from sleep."),db);
+        addAbility(new Ability(49,"Flame Body","Contact with the Pokémon may burn the foe."),db);
+        addAbility(new Ability(50,"Run Away","Enables sure getaway from wild Pokémon."),db);
+        addAbility(new Ability(51,"Keen Eye","Prevents the Pokémon from losing accuracy."),db);
+        addAbility(new Ability(52,"Hyper Cutter","Prevents the Attack stat from being lowered."),db);
+        addAbility(new Ability(53,"Pickup","The Pokémon may pick up items."),db);
+        addAbility(new Ability(54,"Truant","The Pokémon can't attack on consecutive turns."),db);
+        addAbility(new Ability(55,"Hustle","Boosts the Attack stat, but lowers accuracy."),db);
+        addAbility(new Ability(56,"Cute Charm","Contact with the Pokémon may cause infatuation."),db);
+        addAbility(new Ability(57,"Plus","Boosts Sp. Atk if another Pokémon has Minus."),db);
+        addAbility(new Ability(58,"Minus","Boosts Sp. Atk if another Pokémon has Plus."),db);
+        addAbility(new Ability(59,"Forecast","Transforms with the weather."),db);
+        addAbility(new Ability(60,"Sticky Hold","Protects the Pokémon from item theft."),db);
+        addAbility(new Ability(61,"Shed Skin","The Pokémon may heal its own status problems."),db);
+        addAbility(new Ability(62,"Guts","Boosts Attack if there is a status problem."),db);
+        addAbility(new Ability(63,"Marvel Scale","Boosts Defense if there is a status problem."),db);
+        addAbility(new Ability(64,"Liquid Ooze","Inflicts damage on foes using any draining move."),db);
+        addAbility(new Ability(65,"Overgrow","Powers up Grass-type moves in a pinch."),db);
+        addAbility(new Ability(66,"Blaze","Powers up Fire-type moves in a pinch."),db);
+        addAbility(new Ability(67,"Torrent","Powers up Water-type moves in a pinch."),db);
+        addAbility(new Ability(68,"Swarm","Powers up Bug-type moves in a pinch."),db);
+        addAbility(new Ability(69,"Rock Head","Protects the Pokémon from recoil damage."),db);
+        addAbility(new Ability(70,"Drought","The Pokémon makes it sunny if it is in battle."),db);
+        addAbility(new Ability(71,"Arena Trap","Prevents the foe from fleeing."),db);
+        addAbility(new Ability(72,"Vital Spirit","Prevents the Pokémon from falling asleep."),db);
+        addAbility(new Ability(73,"White Smoke","Prevents the Pokémon's stats from being lowered."),db);
+        addAbility(new Ability(74,"Pure Power","Boosts the power of physical attacks."),db);
+        addAbility(new Ability(75,"Shell Armor","The Pokémon is protected against critical hits."),db);
+        addAbility(new Ability(76,"Air Lock","Eliminates the effects of weather."),db);
+        addAbility(new Ability(77,"Tangled Feet","Raises evasion if the Pokémon is confused."),db);
+        addAbility(new Ability(78,"Motor Drive","Raises Speed if hit by an Electric-type move."),db);
+        addAbility(new Ability(79,"Rivalry","Raises Attack if the foe is of the same gender."),db);
+        addAbility(new Ability(80,"Steadfast","Raises Speed each time the Pokémon flinches."),db);
+        addAbility(new Ability(81,"Snow Cloak","Raises evasion in a hailstorm."),db);
+        addAbility(new Ability(82,"Gluttony","Encourages the early use of a held Berry."),db);
+        addAbility(new Ability(83,"Anger Point","Raises Attack upon taking a critical hit."),db);
+        addAbility(new Ability(84,"Unburden","Raises Speed if a held item is used."),db);
+        addAbility(new Ability(85,"Heatproof","Weakens the power of Fire-type moves."),db);
+        addAbility(new Ability(86,"Simple","The Pokémon is prone to wild stat changes."),db);
+        addAbility(new Ability(87,"Dry Skin","Reduces HP if it is hot. Water restores HP."),db);
+        addAbility(new Ability(88,"Download","Adjusts power according to the foe’s lowest defensive stat."),db);
+        addAbility(new Ability(89,"Iron Fist","Boosts the power of punching moves."),db);
+        addAbility(new Ability(90,"Poison Heal","Restores HP if the Pokémon is poisoned."),db);
+        addAbility(new Ability(91,"Adaptability","Powers up moves of the same type."),db);
+        addAbility(new Ability(92,"Skill Link","Increases the frequency of multi-strike moves."),db);
+        addAbility(new Ability(93,"Hydration","Heals status problems if it is raining."),db);
+        addAbility(new Ability(94,"Solar Power","Boosts Sp. Atk, but lowers HP in sunshine."),db);
+        addAbility(new Ability(95,"Quick Feet","Boosts Speed if there is a status problem."),db);
+        addAbility(new Ability(96,"Normalize","All the Pokémon's moves become Normal type."),db);
+        addAbility(new Ability(97,"Sniper","Powers up moves if they become critical hits."),db);
+        addAbility(new Ability(98,"Magic Guard","The Pokémon only takes damage from attacks."),db);
+        addAbility(new Ability(99,"No Guard","Ensures the Pokémon and its foe’s attacks land."),db);
+        addAbility(new Ability(100,"Stall","The Pokémon moves after even slower foes."),db);
+        addAbility(new Ability(101,"Technician","Powers up the Pokémon's weaker moves."),db);
+        addAbility(new Ability(102,"Leaf Guard","Prevents status problems in sunny weather."),db);
+        addAbility(new Ability(103,"Klutz","The Pokémon can’t use any held items."),db);
+        addAbility(new Ability(104,"Mold Breaker","Moves can be used regardless of Abilities."),db);
+        addAbility(new Ability(105,"Super Luck","Heightens the critical-hit ratios of moves."),db);
+        addAbility(new Ability(106,"Aftermath","Damages the foe landing the finishing hit."),db);
+        addAbility(new Ability(107,"Anticipation","Senses the foe’s dangerous moves."),db);
+        addAbility(new Ability(108,"Forewarn","Determines what moves the foe has."),db);
+        addAbility(new Ability(109,"Unaware","Ignores any change in stats by the foe."),db);
+        addAbility(new Ability(110,"Tinted Lens","Powers up “not very effective” moves."),db);
+        addAbility(new Ability(111,"Filter","Powers down supereffective moves."),db);
+        addAbility(new Ability(112,"Slow Start","Temporarily halves Attack and Speed."),db);
+        addAbility(new Ability(113,"Scrappy","Enables moves to hit Ghost-type foes."),db);
+        addAbility(new Ability(114,"Storm Drain","The Pokémon draws in all Water-type moves."),db);
+        addAbility(new Ability(115,"Ice Body","The Pokémon regains HP in a hailstorm."),db);
+        addAbility(new Ability(116,"Solid Rock","Powers down supereffective moves."),db);
+        addAbility(new Ability(117,"Snow Warning","The Pokémon summons a hailstorm in battle."),db);
+        addAbility(new Ability(118,"Honey Gather","The Pokémon may gather Honey from somewhere."),db);
+        addAbility(new Ability(119,"Frisk","The Pokémon can check the foe’s held item."),db);
+        addAbility(new Ability(120,"Reckless","Powers up moves that have recoil damage."),db);
+        addAbility(new Ability(121,"Multitype","Changes type to match the held Plate."),db);
+        addAbility(new Ability(122,"Flower Gift","Powers up party Pokémon when it is sunny."),db);
+        addAbility(new Ability(123,"Bad Dreams","Reduces a sleeping foe’s HP."),db);
+        addAbility(new Ability(124,"Pickpocket","Steals attacking Pokémon's held item on contact."),db);
+        addAbility(new Ability(125,"Sheer Force","Strengthens moves with extra effects to 1.3× their power, but prevents their extra effects."),db);
+        addAbility(new Ability(126,"Contrary","Inverts stat modifiers."),db);
+        addAbility(new Ability(127,"Unnerve","Prevents opposing Pokémon from eating held Berries."),db);
+        addAbility(new Ability(128,"Defiant","Raises Attack two stages upon having any stat lowered."),db);
+        addAbility(new Ability(129,"Defeatist","Halves Attack and Special Attack below 50% HP."),db);
+        addAbility(new Ability(130,"Cursed Body","Has a 30% chance of Disabling any move that hits the Pokémon."),db);
+        addAbility(new Ability(131,"Healer","Has a 30% chance of curing each adjacent ally of any major status ailment after each turn."),db);
+        addAbility(new Ability(132,"Friend Guard","Decreases damage inflicted against ally Pokémon."),db);
+        addAbility(new Ability(133,"Weak Armor","Raises Speed and lowers Defense by one stage each upon being hit by any move."),db);
+        addAbility(new Ability(134,"Heavy Metal","Doubles the Pokémon's weight."),db);
+        addAbility(new Ability(135,"Light Metal","Halves the Pokémon's weight."),db);
+        addAbility(new Ability(136,"Multiscale","Halves damage taken from full HP."),db);
+        addAbility(new Ability(137,"Toxic Boost","Increases Attack to 1.5× when poisoned."),db);
+        addAbility(new Ability(138,"Flare Boost","Increases Special Attack to 1.5× when burned."),db);
+        addAbility(new Ability(139,"Harvest","Sometimes restores a consumed Berry."),db);
+        addAbility(new Ability(140,"Telepathy","Protects against damaging moves from friendly Pokémon."),db);
+        addAbility(new Ability(141,"Moody","Raises a random stat two stages and lowers another one stage after each turn."),db);
+        addAbility(new Ability(142,"Overcoat","Protects against damage from weather."),db);
+        addAbility(new Ability(143,"Poison Touch","Has a 30% chance of poisoning Pokémon upon contact when attacking."),db);
+        addAbility(new Ability(144,"Regenerator","Heals for 1/3 max HP upon leaving battle."),db);
+        addAbility(new Ability(145,"Big Pecks","Protects the Pokémon from Defense-lowering attacks."),db);
+        addAbility(new Ability(146,"Sand Rush","Doubles Speed during a sandstorm."),db);
+        addAbility(new Ability(147,"Wonder Skin","Has a 50% chance of protecting against non-damaging moves that inflict major status ailments."),db);
+        addAbility(new Ability(148,"Analytic","Strengthens moves when moving last."),db);
+        addAbility(new Ability(149,"Illusion","Takes the appearance of the last conscious party Pokémon upon being sent out until hit by a damaging move."),db);
+        addAbility(new Ability(150,"Imposter","Transforms upon entering battle."),db);
+        addAbility(new Ability(151,"Infiltrator","Ignores Light Screen, Reflect, and Safeguard."),db);
+        addAbility(new Ability(152,"Mummy","Contact with this Pokémon spreads this Ability."),db);
+        addAbility(new Ability(153,"Moxie","Raises Attack one stage upon KOing a Pokémon."),db);
+        addAbility(new Ability(154,"Justified","Raises Attack when hit by Dark-type moves."),db);
+        addAbility(new Ability(155,"Rattled","Raises Speed one stage upon being hit by a Dark, Ghost, or Bug move."),db);
+        addAbility(new Ability(156,"Magic Bounce","Reflects most non-damaging moves back at their user."),db);
+        addAbility(new Ability(157,"Sap Sipper","Absorbs Grass moves, raising Attack one stage."),db);
+        addAbility(new Ability(158,"Prankster","Raises non-damaging moves' priority by one stage."),db);
+        addAbility(new Ability(159,"Sand Force","Strengthens Rock, Ground, and Steel moves to 1.3× their power during a sandstorm."),db);
+        addAbility(new Ability(160,"Iron Barbs","Damages attacking Pokémon for 1/8 their max HP on contact."),db);
+        addAbility(new Ability(161,"Zen Mode","Changes the Pokémon's shape when HP is halved."),db);
+        addAbility(new Ability(162,"Victory Star","Raises moves' accuracy to 1.1× for friendly Pokémon."),db);
+        addAbility(new Ability(163,"Turboblaze","Moves can be used regardless of Abilities."),db);
+        addAbility(new Ability(164,"Teravolt","Moves can be used regardless of Abilities."),db);
+        addAbility(new Ability(165,"Aroma Veil","Protects allies from attacks that limit their move choices."),db);
+        addAbility(new Ability(166,"Flower Veil","Prevents lowering of ally Grass-type Pokémon's stats."),db);
+        addAbility(new Ability(167,"Cheek Pouch","Restores HP as well when the Pokémon eats a Berry."),db);
+        addAbility(new Ability(168,"Protean","Changes the Pokémon's type to the same type of the move it is using."),db);
+        addAbility(new Ability(169,"Fur Coat","Halves damage from physical moves."),db);
+        addAbility(new Ability(170,"Magician","The Pokémon steals the held item of a Pokémon it hits with a move."),db);
+        addAbility(new Ability(171,"Bulletproof","Protects the Pokémon from some ball and bomb moves."),db);
+        addAbility(new Ability(172,"Competitive","Boosts the Sp.Atk stat when a stat is lowered."),db);
+        addAbility(new Ability(173,"Strong Jaw","The Pokémon's strong jaw gives it tremendous biting power."),db);
+        addAbility(new Ability(174,"Refrigerate","Normal-type moves become Ice-type moves."),db);
+        addAbility(new Ability(175,"Sweet Veil","Prevents itself and its allies from falling asleep."),db);
+        addAbility(new Ability(176,"Stance Change","The Pokémon changes form depending on how it battles."),db);
+        addAbility(new Ability(177,"Gale Wings","Gives priority to Flying-type moves."),db);
+        addAbility(new Ability(178,"Mega Launcher","Powers up aura and pulse moves."),db);
+        addAbility(new Ability(179,"Grass Pelt","Boosts the Defense stat in Grassy Terrain."),db);
+        addAbility(new Ability(180,"Symbiosis","The Pokémon can pass an item to an ally."),db);
+        addAbility(new Ability(181,"Tough Claws","Powers up moves that make direct contact."),db);
+        addAbility(new Ability(182,"Pixilate","Normal-type moves become Fairy-type moves."),db);
+        addAbility(new Ability(183,"Gooey","Contact with the Pokémon lowers the attacker's Speed stat."),db);
+        addAbility(new Ability(184,"Aerilate","Normal-type moves become Flying-type moves."),db);
+        addAbility(new Ability(185,"Parental Bond","Parent and child attack together."),db);
+        addAbility(new Ability(186,"Dark Aura","Powers up each Pokémon's Dark-type moves."),db);
+        addAbility(new Ability(187,"Fairy Aura","Powers up each Pokémon's Fairy-type moves."),db);
+        addAbility(new Ability(188,"Aura Break","The effects of Aura Abilities are reversed."),db);
+        addAbility(new Ability(189,"Primordial Sea","Causes heavy rain."),db);
+        addAbility(new Ability(190,"Desolate Land","Creates harsh sunlight."),db);
+        addAbility(new Ability(191,"Delta Stream","Eliminates weather effects and eliminates weaknesses of Flying-type Pokémon."),db);
+
+
     }
 }
