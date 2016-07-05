@@ -301,10 +301,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         addPokemon(new Pokemon(26,"Raichu"),db);
         addPokemon(new Pokemon(27,"Sandshrew"),db);
         addPokemon(new Pokemon(28,"Sandslash"),db);
-        addPokemon(new Pokemon(29,"Nidoran♀"),db);
+        addPokemon(new Pokemon(29,"Nidoran-f"),db);
         addPokemon(new Pokemon(30,"Nidorina"),db);
         addPokemon(new Pokemon(31,"Nidoqueen"),db);
-        addPokemon(new Pokemon(32,"Nidoran♂"),db);
+        addPokemon(new Pokemon(32,"Nidoran-m"),db);
         addPokemon(new Pokemon(33,"Nidorino"),db);
         addPokemon(new Pokemon(34,"Nidoking"),db);
         addPokemon(new Pokemon(35,"Clefairy"),db);
