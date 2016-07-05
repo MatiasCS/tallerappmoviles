@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/blackbackground"
-        android:text="@string/kanto_region"
+        android:text="@string/move_list"
         android:textColor="@color/white"
         android:textStyle="bold" />
 
